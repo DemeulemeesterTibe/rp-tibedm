@@ -1,3 +1,6 @@
 [submodule "tts_models/nvidia_flowtron/flowtron"]
 	path = tts_models/nvidia_flowtron/flowtron
 	url = https://github.com/NVIDIA/flowtron.git
+[submodule "tts_models/nvidia_RADTTS/RADTTS"]
+	path = tts_models/nvidia_RADTTS/RADTTS
+	url = https://github.com/NVIDIA/radtts.git

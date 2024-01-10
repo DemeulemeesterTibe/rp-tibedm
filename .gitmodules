@@ -4,3 +4,6 @@
 [submodule "tts_models/nvidia_RADTTS/RADTTS"]
 	path = tts_models/nvidia_RADTTS/RADTTS
 	url = https://github.com/NVIDIA/radtts.git
+[submodule "tts_models/tortoise/tortoise_tts"]
+	path = tts_models/tortoise/tortoise_tts
+	url = https://github.com/neonbjb/tortoise-tts.git

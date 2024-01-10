@@ -1,0 +1,3 @@
+[submodule "tts_models/nvidia_flowtron/flowtron"]
+	path = tts_models/nvidia_flowtron/flowtron
+	url = https://github.com/NVIDIA/flowtron.git

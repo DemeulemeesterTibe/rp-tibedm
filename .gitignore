@@ -3,6 +3,7 @@ tts_models/audio/*.wav
 tts_models/dataset/
 
 tts_models/bark/speakers/
+tts_models/bark/bark/
 tts_models/bark/*.wav
 
 tts_models/coqui_xtss/dataset/

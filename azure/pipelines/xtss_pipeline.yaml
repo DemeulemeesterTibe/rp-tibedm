@@ -1,7 +1,7 @@
 $schema: https://azuremlschemas.azureedge.net/latest/commandComponent.schema.json
 
 type: pipeline
-name: Xtts-Pipeline-6
+name: Xtts-Pipeline-8
 display_name: Xtts Pipeline Voice Cloning
 experiment_name: Cloning voice with Xtts
 
@@ -10,8 +10,8 @@ inputs:
     type: uri_folder
     path: azureml:alan_wake_short:1
   language: "en"
-  buffer: 0.2
-  eval_percentage: 0.15
+  buffer: 20
+  eval_percentage: 15
   speaker_name: "alanWake"
   epochs: 15
   grad_acum: 1

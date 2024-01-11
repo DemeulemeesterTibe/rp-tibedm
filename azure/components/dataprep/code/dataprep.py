@@ -153,6 +153,7 @@ def main():
     df = pandas.DataFrame(metadata)
     df = df.sample(frac=1)
     num_val_samples = int(len(df)*eval_percentage)
+    print("num_val_samples\t",num_val_samples)
 
     df_eval = df[:num_val_samples]
     df_train = df[num_val_samples:]
@@ -164,6 +165,8 @@ def main():
     eval_metadata_path = os.path.join(out_path, "metadata_eval.csv")
     df_eval = df_eval.sort_values('audio_file')
     df_eval.to_csv(eval_metadata_path, sep="|", index=False)
+    
+    print("Done Preprocessing!")
 
     # deallocate VRAM and RAM
     # del df_train, df_eval, df, metadata

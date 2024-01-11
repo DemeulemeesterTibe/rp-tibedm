@@ -1,7 +1,7 @@
 $schema: https://azuremlschemas.azureedge.net/latest/commandComponent.schema.json
 
 type: pipeline
-name: Xtts-Pipeline-4
+name: Xtts-Pipeline-6
 display_name: Xtts Pipeline Voice Cloning
 experiment_name: Cloning voice with Xtts
 

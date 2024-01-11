@@ -1,6 +1,7 @@
 import os
 from utils import *
 import argparse
+import mlflow
 
 def train_model():
     parser = argparse.ArgumentParser(description='Train the model')
@@ -17,18 +18,18 @@ def train_model():
     data_folder = args.data_folder
     output_path = args.output_path
     language = args.language
-    num_epochs = args.epochs
-    grad_acumm = args.grad_acum
-    batch_size = args.batch_size
+    num_epochs = int(args.epochs)
+    grad_acumm = int(args.grad_acum)
+    batch_size = int(args.batch_size)
     speaker_name = args.speaker_name
-    max_audio_length = args.max_audio_length
+    max_audio_length = int(args.max_audio_length)
 
     # get train and eval csv files
     train_csv = os.path.join(data_folder, "metadata_train.csv")
     eval_csv = os.path.join(data_folder, "metadata_eval.csv")
 
     # model_path = os.path.join(data_folder, "training_model")
-
+    mlflow.autolog()
     clear_gpu_cache()
     # check if train and eval csv files exist
     print("max_audio_length\t",max_audio_length)

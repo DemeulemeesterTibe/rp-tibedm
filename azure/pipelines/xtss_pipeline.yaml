@@ -1,7 +1,7 @@
 $schema: https://azuremlschemas.azureedge.net/latest/commandComponent.schema.json
 
 type: pipeline
-name: Xtts-Pipeline
+name: Xtts-Pipeline-4
 display_name: Xtts Pipeline Voice Cloning
 experiment_name: Cloning voice with Xtts
 
@@ -13,12 +13,16 @@ inputs:
   buffer: 0.2
   eval_percentage: 0.15
   speaker_name: "alanWake"
+  epochs: 15
+  grad_acum: 1
+  batch_size: 16
+  max_audio_length: 11
 
 settings:
   default_compute: azureml:cpu-compute-rp
 
 jobs:
-  prepro:
+  dataprep:
     type: command
     component: ../components/dataprep/dataprep.yaml
     inputs:
@@ -27,6 +31,22 @@ jobs:
       buffer: ${{parent.inputs.buffer}}
       eval_percentage: ${{parent.inputs.eval_percentage}}
       speaker_name: ${{parent.inputs.speaker_name}}
+
+    outputs:
+      output_data:
+        mode: rw_mount
+
+  train:
+    type: command
+    component: ../components/training/train.yaml
+    inputs:
+      data_folder: ${{parent.jobs.dataprep.outputs.output_data}}
+      language: ${{parent.inputs.language}}
+      epochs: ${{parent.inputs.epochs}}
+      grad_acum: ${{parent.inputs.grad_acum}}
+      batch_size: ${{parent.inputs.batch_size}}
+      speaker_name: ${{parent.inputs.speaker_name}}
+      max_audio_length: ${{parent.inputs.max_audio_length}}
 
     outputs:
       output_data:

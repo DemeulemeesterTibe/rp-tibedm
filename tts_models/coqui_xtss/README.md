@@ -1,6 +1,26 @@
 # XTSS 2.0 model
 
 ## Creating Virtual environment
+1. Firstly install cuda and cudnn using the [Nvidia docs](https://docs.nvidia.com/deeplearning/cudnn/install-guide/index.html#install-windows)
+2. Firstly create a conda env using the following command:
+    ```bash
+        conda create -n xtss python=3.10
+    ```
+3. Now activate your conda env:
+    ```bash
+        conda activate xtss
+    ```
+4. Install the requirements from the [requirements.txt](requirements.txt) (Make sure you are in the correct directory before you run this command)
+    ```bash
+        pip install -r requirements.txt
+    ```
+5. Install cuda enabled pytorch using the following command (you can find this command here [pytorch](https://pytorch.org/)):
+    ```bash
+        conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia
+    ```
+
+Or import the env using the [xtssConda.yaml](xtssConda.yaml) file
+
 
 ## Fine-Tuning a XTSS 2.0 model locally
 

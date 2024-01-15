@@ -20,7 +20,4 @@
 
 ## Model outputs
 
-Here are some audio examples: 
-<audio controls="controls">
-  <source type="audio/wav" src="examples/obama-xtss.wav"></source>
-</audio>
+Here you can find some outputs of fine-tuned models [examples](examples/)

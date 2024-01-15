@@ -21,5 +21,6 @@ tts_models/tortoise/*.wav
 app/api/models/
 app/api/__pycache__/
 
-app/web/web/__pycache__/
-app/web/
+app/web/node_modules/
+app/web/package-lock.json
+app/web/.env

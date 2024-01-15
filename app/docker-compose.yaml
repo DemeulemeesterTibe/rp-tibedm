@@ -17,11 +17,11 @@ services:
               count: 1
               capabilities: [gpu]
 
-  # web:
-  #   build: 
-  #     context: ./web
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "3000:3000"
-  #   volumes:
-  #     - ./web:/app
+  web:
+    build: 
+      context: ./web
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./web:/app

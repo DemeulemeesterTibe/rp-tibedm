@@ -5,6 +5,7 @@ services:
     build: 
       context: ./api
       dockerfile: Dockerfile
+    image: demeulemeestertibe/rp-api
     ports:
       - "8000:8000"
     volumes:
@@ -21,6 +22,7 @@ services:
     build: 
       context: ./web
       dockerfile: Dockerfile
+    image: demeulemeestertibe/rp-web
     ports:
       - "3000:3000"
     volumes:

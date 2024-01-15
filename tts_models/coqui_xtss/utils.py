@@ -1,5 +1,6 @@
 import gc
 import os
+import shutil
 import pandas
 import platform
 from tqdm import tqdm
@@ -178,17 +179,6 @@ def format_audio_list(audio_speaker_list,out_path,target_language,eval_percentag
     print("Total audio size: {}".format(audio_total_size))
 
     return train_metadata_path, eval_metadata_path, audio_total_size
-
-from TTS.tts.layers.xtts.trainer.gpt_trainer import GPTArgs, GPTTrainer, GPTTrainerConfig, XttsAudioConfig
-from TTS.utils.manage import ModelManager
-from TTS.tts.datasets import load_tts_samples
-from TTS.tts.configs.shared_configs import BaseDatasetConfig
-from trainer import Trainer, TrainerArgs
-import gc
-import os
-import platform
-os.environ['KMP_DUPLICATE_LIB_OK'] = 'TRUE'
-import torch
 
 
 def create_train_model(output_path, train_csv, eval_csv, num_epochs, batch_size, grad_acum, language, speakers ,max_audio_length=255995):
@@ -389,25 +379,18 @@ def train_model(language, train_csv, eval_csv, num_epochs, batch_size, grad_acum
     clear_gpu_cache()
     # check if train and eval csv files exist
 
-    print(max_audio_length)
     max_audio_length = int(max_audio_length * 22050)
-    print(max_audio_length)
+
     config_path, original_xtts_checkpoint, vocab_file, exp_path, speaker_refs = create_train_model(output_path, train_csv, eval_csv, num_epochs, batch_size, grad_acumm, language, speakers, max_audio_length)
 
     os.makedirs(os.path.join(exp_path, "speaker_refs"), exist_ok=True)
+    
+    shutil.copyfile(os.path.join(os.path.dirname(vocab_file), os.path.basename(vocab_file)), os.path.join(exp_path, "vocab.json"))
+    shutil.copyfile(os.path.join(os.path.dirname(config_path), os.path.basename(config_path)), os.path.join(exp_path, "original_config.json"))
 
-    if platform.system() == "Windows":
-        os.system('copy "{}" "{}"'.format(os.path.dirname(vocab_file)+'\\'+os.path.basename(vocab_file), os.path.join(exp_path, "vocab.json")))
-        os.system('copy "{}" "{}"'.format(os.path.dirname(config_path)+'\\'+os.path.basename(config_path), os.path.join(exp_path, "original_config.json")))
-        for speaker,audio in speaker_refs.items():
-            os.makedirs(os.path.join(exp_path, "speaker_refs",speaker), exist_ok=True)
-            os.system('copy "{}" "{}"'.format(os.path.dirname(audio)+'\\'+os.path.basename(audio), os.path.join(exp_path, "speaker_refs",speaker, speaker+".wav")))
-    else:
-        os.system(f"cp {vocab_file} {exp_path}")
-        os.system(f"cp {config_path} {exp_path}")
-        for speaker,audio in speaker_refs.items():
-            os.makedirs(os.path.join(exp_path, "speaker_refs",speaker), exist_ok=True)
-            os.system(f"cp {audio} {os.path.join(exp_path, 'speaker_refs',speaker, speaker+'.wav')}")
+    for speaker, audio in speaker_refs.items():
+        os.makedirs(os.path.join(exp_path, "speaker_refs", speaker), exist_ok=True)
+        shutil.copyfile(os.path.join(os.path.dirname(audio), os.path.basename(audio)), os.path.join(exp_path, "speaker_refs", speaker, speaker + ".wav"))
 
     ft_xtts_checkpoint = os.path.join(exp_path, "best_model.pth")
     # change the name of the checkpoint

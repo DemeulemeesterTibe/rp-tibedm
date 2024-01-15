@@ -19,3 +19,6 @@ tts_models/tortoise/*.wav
 
 app/api/models/
 app/api/__pycache__/
+
+app/web/web/__pycache__/
+app/web/

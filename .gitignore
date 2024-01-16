@@ -1,4 +1,4 @@
-tts_models/audio/*.wav
+tts_models/audio/*
 
 tts_models/dataset/
 

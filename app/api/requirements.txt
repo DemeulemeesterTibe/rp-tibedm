@@ -3,3 +3,4 @@ fastapi[all]
 pandas
 TTS==0.21.3
 faster-whisper==0.9.0
+openai==1.7.2

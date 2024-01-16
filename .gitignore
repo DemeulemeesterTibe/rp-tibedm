@@ -25,3 +25,4 @@ app/api/__pycache__/
 app/web/node_modules/
 app/web/package-lock.json
 app/web/.env
+app/api/.env

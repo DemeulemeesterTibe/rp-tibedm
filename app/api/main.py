@@ -19,7 +19,9 @@ MODEL = None
 MODEL_NAME = None
 MODEL_LIST = os.listdir('models')
 
+
 SPEAKER_INF = None
+SPEAKER_NAME = None
 
 @app.get('/healthcheck')
 def healthcheck():
@@ -35,6 +37,22 @@ def getmodels():
     MODEL_LIST = os.listdir('models')
     return MODEL_LIST
 
+@app.get('/get/selected/model')
+def selectedModel():
+    global MODEL_NAME
+    if MODEL_NAME is None:
+        return {'selected': 'None'}
+    else:
+        return {'selected': MODEL_NAME}
+
+@app.get('/get/selected/speaker')
+def selectedModel():
+    global SPEAKER_NAME
+    if SPEAKER_NAME is None:
+        return {'selected': 'None'}
+    else:
+        return {'selected': SPEAKER_NAME}
+    
 @app.get('/get/model/speakers')
 def selectmodel():
     global MODEL, MODEL_LIST, MODEL_NAME
@@ -62,10 +80,11 @@ def selectmodel(modelname):
 
 @app.get('/select/model/speaker/{speakername}')
 def selectmodel(speakername):
-    global MODEL, MODEL_LIST, MODEL_NAME, SPEAKER_INF
+    global MODEL, MODEL_LIST, MODEL_NAME, SPEAKER_INF, SPEAKER_NAME
+    print(os.listdir(os.path.join('models',MODEL_NAME,'speaker_refs')))
     if MODEL_NAME is None:
         return {'status': 'No model selected'}
-    if speakername not in os.path.join('models',MODEL_NAME,'speaker_refs'):
+    if speakername not in os.listdir(os.path.join('models',MODEL_NAME,'speaker_refs')):
         return {'status': 'Speaker not found'}
     print(f"Loading speaker {speakername}")
 
@@ -76,6 +95,8 @@ def selectmodel(speakername):
 
     gpt_cond_latent, speaker_embedding = MODEL.get_conditioning_latents(audio_path=speaker_ref, gpt_cond_len=MODEL.config.gpt_cond_len, max_ref_length=MODEL.config.max_ref_len, sound_norm_refs=MODEL.config.sound_norm_refs)
     SPEAKER_INF = [gpt_cond_latent, speaker_embedding]
+    SPEAKER_NAME = speakername
+    print(f"{speakername} speaker Loaded")
 
     return {'status': 'Speaker loaded'}
 

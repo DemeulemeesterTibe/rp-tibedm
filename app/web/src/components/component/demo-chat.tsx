@@ -32,12 +32,30 @@ export function DemoChat() {
     key: 3,
     value: "Speaker 3"
   }]
+
+  const [messages,setMessages] =useState(
+    [{
+    key: 1,
+    value: "Hello, how can I assist you today?",
+    speaker: "Openai"
+  },{
+    key: 2,
+    value: "I need help with my order.",
+    speaker: "User"
+  }]
+  )
   
   const [model, setModel] = useState("Choose model")
   const [speaker, setSpeaker] = useState("Select a model first")
 
-  const sendButton = () => {
+  const sendMessage = () => {
     console.log("send button pressed")
+  }
+  const checkKey = (e:any) => {
+    if (e.key === 'Enter') {
+      console.log("enter pressed")
+      sendMessage()
+    }
   }
 
   return (
@@ -68,7 +86,7 @@ export function DemoChat() {
             <DropdownMenuContent className="w-56">
             {
               model === "Choose model" ? (
-                <DropdownMenuItem>
+                <DropdownMenuItem key={1}>
                   <p className="block py-2 px-3 rounded">
                     Select a model first
                   </p>
@@ -88,34 +106,39 @@ export function DemoChat() {
           <div className="flex flex-col h-full">
             <div className="flex-1 overflow-y-auto">
               <div className="flex flex-col space-y-4">
-                <div className="flex items-end">
-                  <Avatar className="w-10 h-10 mr-4">
-                    <AvatarImage alt="Speaker 1" src="/openai.png" />
-                    <AvatarFallback>S1</AvatarFallback>
-                  </Avatar>
-                  <div className="bg-gray-200 dark:bg-gray-800 rounded-lg px-4 py-2">
-                    <p>Hello, how can I assist you today?</p>
-                  </div>
-                </div>
-                <div className="flex items-end justify-end">
-                  <div className="bg-blue-500 text-white rounded-lg px-4 py-2 mr-4">
-                    <p>I need help with my order.</p>
-                  </div>
-                  <Avatar className="w-10 h-10">
-                    <AvatarImage alt="Speaker 2" src="/user.png" />
-                    <AvatarFallback>S2</AvatarFallback>
-                  </Avatar>
-                </div>
+                {messages.map((item) => (
+                  (item.speaker === "Openai") ?(
+                    <div className="flex items-end" key={item.key}>
+                      <Avatar className="w-10 h-10 mr-4">
+                        <AvatarImage alt="Speaker 1" src="/openai.png" />
+                        <AvatarFallback>S1</AvatarFallback>
+                      </Avatar>
+                      <div className="bg-gray-200 dark:bg-gray-800 rounded-lg px-4 py-2 max-w-1/2 max-w-[650px]">
+                        <p>{item.value}</p>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex items-end justify-end" key={item.key}>
+                      <div className="bg-blue-500 text-white rounded-lg px-4 py-2 mr-4 max-w-1/2 max-w-[650px]">
+                        <p>{item.value}</p>
+                      </div>
+                      <Avatar className="w-10 h-10">
+                        <AvatarImage alt="Speaker 2" src="/user.png" />
+                        <AvatarFallback>S2</AvatarFallback>
+                      </Avatar>
+                    </div>
+                  )
+                  ))}
               </div>
             </div>
             <div className="mt-4 border-t dark:border-gray-700 pt-4">
               <div className="flex">
-                <Input className="flex-1 mr-2" placeholder="Type your message..." />
+                <Input className="flex-1 mr-2" placeholder="Type your message..." onKeyPress={checkKey}/>
                 <Button variant="dark" className="ml-2 mr-4" type="button">
                   <img alt="Microphone" className="h-6 w-6" src="/mic.svg" />
                   <span className="sr-only">Record voice</span>
                 </Button>
-                <Button variant="dark" onClick={sendButton}>Send</Button>
+                <Button variant="dark" onClick={sendMessage}>Send</Button>
               </div>
             </div>
           </div>

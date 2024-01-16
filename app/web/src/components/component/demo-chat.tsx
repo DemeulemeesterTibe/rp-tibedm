@@ -6,23 +6,17 @@ import { Button } from "@/components/ui/button"
 import { DropdownMenuTrigger, DropdownMenuItem, DropdownMenuContent, DropdownMenu } from "@/components/ui/dropdown-menu"
 import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar"
 import { Input } from "@/components/ui/input"
-import { useState } from "react"
+import { useEffect ,useState } from "react"
 import { Navbar } from "@/components/component/navbar"
+import { BackendService } from "@/services/backendService"
 
 export function DemoChat() {
-
-  const modelItems = [{
-    key: 1,
-    value: "Model 1"
-  },{
-    key: 2,
-    value: "Model 2"
-  },{
-    key: 3,
-    value: "Model 3"
-  }]
-
-  const speakerItems = [{
+  const backendService = new BackendService()
+  
+  const [modelItems, setModelItems] = useState([])
+  const [model, setModel] = useState("No model selected")
+  const [speaker, setSpeaker] = useState("Select a model first")
+  const [speakerItems, setSpeakerItems] = useState([{
     key: 1,
     value: "Speaker 1"
   },{
@@ -31,7 +25,41 @@ export function DemoChat() {
   },{
     key: 3,
     value: "Speaker 3"
-  }]
+  }])
+
+  const checkSpeaker = async (model:any) => {
+    setSpeaker("Loading speakers...")
+    let speakers:any = backendService.getSpeakers()
+    let selectedSpeaker:any = backendService.getSelectedSpeaker()
+    speakers = await speakers
+    selectedSpeaker = await selectedSpeaker
+    setSpeakerItems(speakers.map((speaker:any, index:any) => ({ key: index + 1, value: speaker })));
+    if (selectedSpeaker["selected"] === "None") {
+      setSpeaker("Choose speaker")
+    } else {
+      // console.log(selectedSpeaker)
+      setSpeaker(selectedSpeaker["selected"])
+    }
+    // setSpeaker(speakers[0])
+  }
+
+  useEffect(() => {
+    // check if the backend has a model selected
+    backendService.getSelectedModel().then((res) => {
+      if (res["selected"] === "None") {
+        setModel("No model selected")
+      } else {
+        setModel(res["selected"])
+        checkSpeaker(res["selected"])
+      }
+    })
+    // get the models for the dropdown
+    backendService.getModels().then((res) => {
+      // console.log(res)
+      setModelItems(res.map((model:any, index:any) => ({ key: index + 1, value: model })));
+    })
+  }, [])
+
 
   const [messages,setMessages] =useState(
     [{
@@ -45,8 +73,6 @@ export function DemoChat() {
   }]
   )
   
-  const [model, setModel] = useState("Choose model")
-  const [speaker, setSpeaker] = useState("Select a model first")
 
   const sendMessage = () => {
     console.log("send button pressed")
@@ -56,6 +82,23 @@ export function DemoChat() {
       console.log("enter pressed")
       sendMessage()
     }
+  }
+
+  const selectedModel = async (model:any) => {
+    setModel("Loading model...")
+    setSpeaker("Wait for model to load")
+    const models = await backendService.selectModel(model)
+    console.log(models)
+    setModel(model)
+    checkSpeaker(model)
+    // setSpeaker("Choose speaker")
+  }
+
+  const selectedSpeaker = async (speaker:any) => {
+    setSpeaker("Loading speaker...")
+    const selectedSpeaker = await backendService.selectSpeaker(speaker)
+    console.log(selectedSpeaker)
+    setSpeaker(speaker)
   }
 
   return (
@@ -69,8 +112,8 @@ export function DemoChat() {
               <Button variant="outline">{model}</Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">
-              {modelItems.map((item) => (
-                <DropdownMenuItem key={item.key} onClick={() => setModel(item.value)}>
+              {modelItems.map((item:any) => (
+                <DropdownMenuItem key={item.key} onClick={() => selectedModel(item.value)}>
                   <p className="block py-2 px-3 rounded" >
                     {item.value}
                   </p>
@@ -93,7 +136,7 @@ export function DemoChat() {
                 </DropdownMenuItem>
               ) : (
                 speakerItems.map((item) => (
-                  <DropdownMenuItem key={item.key} onClick={() => setSpeaker(item.value)}>
+                  <DropdownMenuItem key={item.key} onClick={() => selectedSpeaker(item.value)}>
                     <p className="block py-2 px-3 rounded">{item.value}</p>
                   </DropdownMenuItem>
                 ))

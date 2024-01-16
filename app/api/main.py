@@ -1,10 +1,14 @@
 import base64
 import numpy as np
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, File, UploadFile, Request
 from fastapi.middleware.cors import CORSMiddleware
 import os
 from utils import *
 import torch
+from openai import OpenAI
+
+from dotenv import load_dotenv
+load_dotenv()
 
 app = FastAPI()
 app.add_middleware(
@@ -15,6 +19,9 @@ app.add_middleware(
     allow_headers=['*'],
 )
 
+
+CLIENT_OPENAI = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
 MODEL = None
 MODEL_NAME = None
 MODEL_LIST = os.listdir('models')
@@ -22,6 +29,7 @@ MODEL_LIST = os.listdir('models')
 
 SPEAKER_INF = None
 SPEAKER_NAME = None
+
 
 @app.get('/healthcheck')
 def healthcheck():
@@ -32,13 +40,13 @@ def default():
     return {'Default': 'Welcome to my TTS API'}
 
 @app.get('/get/models')
-def getmodels():
+def getModels():
     global MODEL_LIST
     MODEL_LIST = os.listdir('models')
     return MODEL_LIST
 
 @app.get('/get/selected/model')
-def selectedModel():
+def selectedSpeaker():
     global MODEL_NAME
     if MODEL_NAME is None:
         return {'selected': 'None'}
@@ -54,7 +62,7 @@ def selectedModel():
         return {'selected': SPEAKER_NAME}
     
 @app.get('/get/model/speakers')
-def selectmodel():
+def getSpeaker():
     global MODEL, MODEL_LIST, MODEL_NAME
     if MODEL is None:
         return {'status': 'No model selected'}
@@ -62,7 +70,7 @@ def selectmodel():
     return os.listdir(speaker_dir)
 
 @app.get('/select/model/{modelname}')
-def selectmodel(modelname):
+def selectModel(modelname):
     global MODEL, MODEL_LIST, MODEL_NAME
     if modelname not in MODEL_LIST:
         return {'status': 'Model not found'}
@@ -79,7 +87,7 @@ def selectmodel(modelname):
     return {'status': 'Model loaded'}
 
 @app.get('/select/model/speaker/{speakername}')
-def selectmodel(speakername):
+def selectSpeaker(speakername):
     global MODEL, MODEL_LIST, MODEL_NAME, SPEAKER_INF, SPEAKER_NAME
     print(os.listdir(os.path.join('models',MODEL_NAME,'speaker_refs')))
     if MODEL_NAME is None:
@@ -102,6 +110,7 @@ def selectmodel(speakername):
 
 @app.post('/run/tts')
 def runtts(lang: str, text: str):
+    print(lang, text)
     global MODEL, SPEAKER_INF
     if MODEL is None:
         return {'status': 'No model selected'}
@@ -109,34 +118,37 @@ def runtts(lang: str, text: str):
         return {'status': 'No speaker selected'}
     print(f"Running TTS for {text}")
 
-    out = MODEL.inference(
-        text=text,
-        language=lang,
-        gpt_cond_latent=SPEAKER_INF[0],
-        speaker_embedding=SPEAKER_INF[1],
-        temperature=MODEL.config.temperature, # Add custom parameters here
-        length_penalty=MODEL.config.length_penalty,
-        repetition_penalty=MODEL.config.repetition_penalty,
-        top_k=MODEL.config.top_k,
-        top_p=MODEL.config.top_p,
-        # enable_text_splitting=True
-    )
-    # save it as a wav file
-    audio_tensor = torch.from_numpy(out["wav"])
-
-    # Convert the torch tensor to cpu memory
-    audio_cpu = audio_tensor.cpu()
-
-    # Convert the cpu tensor to a numpy array
-    audio = audio_cpu.numpy()
-
-    # Save it as a wav file
-    audio = audio.tobytes()
-    wav_base64 = base64.b64encode(audio)
+    out = run_tts(MODEL, lang, text, SPEAKER_INF)
     print(f"TTS completed for {text}")
 
-    return {'status': 'TTS completed', 'audio': wav_base64.decode()}
+    return {'status': 'TTS completed', 'audio': out.decode()}
 
+@app.post('/run/openai/completion')
+async def runOpenai(request: Request):
+    global CLIENT_OPENAI
+    try:
+        client_messages = await request.json()
+        messages = [
+            {"role": "user", "content": message['value']} if message['speaker'] == 'User' else
+            {"role": "assistant", "content": message['value']}
+            for message in client_messages
+        ]
+        response = CLIENT_OPENAI.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=messages,
+        )
+        text = response.choices[0].message.content
+
+        print(f"OpenAI completion completed for {text}")
+
+        out = run_tts(MODEL, 'en', text, SPEAKER_INF)
+        # audio = None
+
+        return {'status': 'OpenAI completion completed', 'text': text, 'audio': out}
+    except Exception as e:
+        print(f"Error: {e}")
+        return {'status': 'Error during OpenAI completion', 'error_message': str(e)}
+    
 
 if __name__ == '__main__':
     import uvicorn

@@ -26,6 +26,13 @@ export function DemoChat() {
     key: 3,
     value: "Speaker 3"
   }])
+  const [messages,setMessages] =useState(
+    [{
+    key: 1,
+    value: "Hello, how can I assist you today?",
+    speaker: "Openai"
+  }]
+  )
 
   const checkSpeaker = async (model:any) => {
     setSpeaker("Loading speakers...")
@@ -61,22 +68,39 @@ export function DemoChat() {
   }, [])
 
 
-  const [messages,setMessages] =useState(
-    [{
-    key: 1,
-    value: "Hello, how can I assist you today?",
-    speaker: "Openai"
-  },{
-    key: 2,
-    value: "I need help with my order.",
-    speaker: "User"
-  }]
-  )
   
+  const addMessage = (message:any,speaker:string) => {
+    if (speaker !== "User" && speaker !== "Openai") {
+      console.error("Invalid speaker value. It must be 'User' or 'Openai'.");
+      return; // or throw an error, depending on your desired behavior
+  }
+    setMessages([...messages, {key: messages.length + 1, value: message, speaker: speaker}])
+  }
+
 
   const sendMessage = () => {
+    if(speaker === "Select a model first" || speaker === "Wait for model to load" || speaker === "Loading speaker..." || speaker === "Choose speaker") {
+      return;
+    }
+
+    const input = document.querySelector('input') as HTMLInputElement;
+    // check if the input is empty or whitespace or shorter than 5 characters
+    if (!input.value || !input.value.trim() || input.value.length < 5) {
+      console.log("empty input")
+      return;
+    }
+    addMessage(input.value,"User")
+    backendService.getChatbotResponse(messages).then((res) => {
+      console.log(res)
+      console.log(messages)
+      setMessages(prevMessages => [
+        ...prevMessages,
+        { key: prevMessages.length + 1, value: res["text"], speaker: "Openai" },
+      ]);
+    })
     console.log("send button pressed")
   }
+
   const checkKey = (e:any) => {
     if (e.key === 'Enter') {
       console.log("enter pressed")
@@ -97,7 +121,6 @@ export function DemoChat() {
   const selectedSpeaker = async (speaker:any) => {
     setSpeaker("Loading speaker...")
     const selectedSpeaker = await backendService.selectSpeaker(speaker)
-    console.log(selectedSpeaker)
     setSpeaker(speaker)
   }
 
@@ -128,7 +151,7 @@ export function DemoChat() {
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">
             {
-              model === "Choose model" ? (
+              model === "No model selected" ? (
                 <DropdownMenuItem key={1}>
                   <p className="block py-2 px-3 rounded">
                     Select a model first

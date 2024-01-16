@@ -1,6 +1,10 @@
 "use client";
+import { Navbar } from "@/components/component/navbar"
 export default function Songs() {
     return (
-        <h1> Hello World </h1>
+        <div>
+            <Navbar />
+            <h1>Songs</h1>
+        </div>        
     )
   }

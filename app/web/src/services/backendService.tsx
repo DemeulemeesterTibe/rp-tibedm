@@ -1,4 +1,8 @@
+import { list } from "postcss";
+import { List } from "postcss/lib/list";
+
 export class BackendService {
+    baseUrl: string;
     constructor() {
         this.baseUrl = "http://localhost:8000";
     }
@@ -11,7 +15,7 @@ export class BackendService {
         return response.json();
     }
 
-    async selectModel(model) {
+    async selectModel(model:string) {
         const response = await fetch(this.baseUrl + "/select/model/"+model, {
             method: "get",
             headers: {
@@ -21,7 +25,7 @@ export class BackendService {
         return response.json();
     }
 
-    async selectSpeaker(speaker) {
+    async selectSpeaker(speaker:string) {
         const response = await fetch(this.baseUrl + "/select/model/speaker/"+speaker, {
             method: "get",
             headers: {
@@ -51,6 +55,15 @@ export class BackendService {
         const response = await fetch(this.baseUrl + "/get/selected/speaker", {
             method: "GET",
             headers: {},
+        });
+        return response.json();
+    }
+
+    async getChatbotResponse(messages:any) {
+        const response = await fetch(this.baseUrl + "/run/openai/completion", {
+            method: "POST",
+            headers: {},
+            body: JSON.stringify(messages),
         });
         return response.json();
     }

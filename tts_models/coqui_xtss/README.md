@@ -28,7 +28,7 @@ Or import the env using the [xtssConda.yaml](xtssConda.yaml) file
     - `out_path` – The folder where the dataset will be created and where the runs of the model will be saved.
     - `audio_speaker_list` – A dictionary containing speaker names as keys and lists of corresponding audio file paths as values.
     - `eval_percentage` – The percentage of the dataset to be used for evaluation during training.
-    - `language` – The language of the audio data.
+    - `language` – The language of the audio data. As of now, XTTS-v2 supports 16 languages: English (en), Spanish (es), French (fr), German (de), Italian (it), Portuguese (pt), Polish (pl), Turkish (tr), Russian (ru), Dutch (nl), Czech (cs), Arabic (ar), Chinese (zh-cn), Japanese (ja), Hungarian (hu) and Korean (ko).
     - `epochs` – The number of times the entire dataset is passed through the model during training.
     - `batch_size` – The number of training examples utilized in one iteration.
     - `grad_acum` – The number of batches to accumulate gradients before performing a backward/update pass. It is recommended to make sure that `batch_size` * `grad_acum` is atleast 252 for more efficient training.

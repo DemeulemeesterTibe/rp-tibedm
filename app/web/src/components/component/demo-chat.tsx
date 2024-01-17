@@ -10,13 +10,36 @@ import { useEffect ,useState, useRef } from "react"
 import { Navbar } from "@/components/component/navbar"
 import { BackendService } from "@/services/backendService"
 
+declare global {
+  interface Window {
+    webkitSpeechRecognition:any;
+  }
+}
+
 export function DemoChat() {
+
+  const recognitionRef = useRef<any>(null);
+  const [transcript, setTranscript] = useState<string>("");
+
+  const [language, setLanguage] = useState("English")
+  const [languageItems, setLanguageItems] = useState([{
+    key: 1,
+    value: "English",
+    short: "en"
+  }, {
+    key: 2,
+    value: "Dutch",
+    short: "nl"
+  }
+])
+
+
   const backendService = new BackendService()
   // const [backendService, setBackendService] = useState(new BackendService())
 
   const [recording, setRecording] = useState(false);
   const [audioBlob, setAudioBlob] = useState<Blob>(new Blob());
-  const mediaRecorder = useRef<MediaRecorder | null>(null);
+  // const mediaRecorder = useRef<MediaRecorder | null>(null);
 
 
   const [audioData, setAudioData] = useState(null);
@@ -67,6 +90,12 @@ export function DemoChat() {
       // console.log(res)
       setModelItems(res.map((model:any, index:any) => ({ key: index + 1, value: model })));
     })
+
+    return () => {
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+    }
   }, [])
 
   const playWavFile = (base64Audio:any) => {
@@ -128,14 +157,11 @@ export function DemoChat() {
     input.value = ""
     setLoading(true)
     addMessage(inputValue,"User")
-    console.log("send button pressed")
-    // setLoading(false)
     // set loading to false in useEffect of messages
   }
 
   const checkKey = (e:any) => {
     if (e.key === 'Enter') {
-      console.log("enter pressed")
       sendMessage()
     }
   }
@@ -157,40 +183,80 @@ export function DemoChat() {
   }
 
   const startRecording = () => {
-    navigator.mediaDevices.getUserMedia({ audio: true })
-      .then((stream) => {
-        console
-        mediaRecorder.current = new MediaRecorder(stream);
-        const chunks:any = [];
+    recognitionRef.current = new window.webkitSpeechRecognition();
+    recognitionRef.current.continuous = true;
+    recognitionRef.current.interimResults = true;
 
-        mediaRecorder.current.ondataavailable = (e:any) => {
-          if (e.data.size > 0) {
-            chunks.push(e.data);
-          }
-        };
+    if (language === "Dutch") {
+      // get the short name of the language out of the languageItems array
+      const shortName = languageItems.filter((item) => item.value === "Dutch")[0].short
+      recognitionRef.current.lang = shortName
+    } else {
+      const shortName = languageItems.filter((item) => item.value === "English")[0].short
+      recognitionRef.current.lang = shortName
+    }
+    console.log(recognitionRef.current.lang)
 
-        mediaRecorder.current.onstop = () => {
-          const blob:any = new Blob(chunks, { type: 'audio/wav' });
-          setAudioBlob(blob);
-          const audioUrl = URL.createObjectURL(blob);
-          console.log(audioUrl)
-          const audio = new Audio(audioUrl);
-          audio.play();
-        };
+    const input = document.querySelector('input') as HTMLInputElement;
+    recognitionRef.current.onresult = (event:any) => {
+      const {transcript} = event.results[event.results.length - 1][0];
+      setTranscript(transcript);
+      input.value = transcript
 
-        mediaRecorder.current.start();
-        setRecording(true);
-      })
-      .catch((error) => {
-        console.error('Error accessing microphone:', error);
-      });
+    }
+    setRecording(true);
+    recognitionRef.current.start();
+    // navigator.mediaDevices.getUserMedia({ audio: true })
+    //   .then((stream) => {
+    //     console
+    //     mediaRecorder.current = new MediaRecorder(stream);
+    //     const chunks:any = [];
+
+    //     mediaRecorder.current.ondataavailable = (e:any) => {
+    //       if (e.data.size > 0) {
+    //         chunks.push(e.data);
+    //       }
+    //     };
+
+    //     mediaRecorder.current.onstop = () => {
+    //       const blob:any = new Blob(chunks, { type: 'audio/wav' });
+    //       setAudioBlob(blob);
+    //       const audioUrl = URL.createObjectURL(blob);
+    //       console.log(audioUrl)
+    //       const audio = new Audio(audioUrl);
+    //       audio.play();
+
+    //       const audioData = new FormData();
+    //       audioData.append('audio', blob, 'audio.wav');
+    //       backendService.sendAudioFile(audioData).then((res:any) => {
+    //         console.log(res)
+    //         // addMessage(res["text"],"Openai")
+    //         // setAudioData(res["audio"])
+    //         // playWavFile(res["audio"])
+    //         // setLoading(false)
+    //       } )
+
+
+    //     };
+
+    //     mediaRecorder.current.start();
+    //     setRecording(true);
+    //   })
+    //   .catch((error) => {
+    //     console.error('Error accessing microphone:', error);
+    //   });
   };
 
   const stopRecording = () => {
-    if (mediaRecorder.current && mediaRecorder.current.state === 'recording') {
-      mediaRecorder.current.stop();
-      setRecording(false);
+    setRecording(false);
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
+      console.log(transcript)
     }
+    // if (mediaRecorder.current && mediaRecorder.current.state === 'recording') {
+    //   mediaRecorder.current.stop();
+    //   setRecording(false);
+    // }
   };
 
   return (
@@ -234,6 +300,21 @@ export function DemoChat() {
                 ))
               )
             }
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <h2 className="text-lg font-semibold mt-8 mb-4">Language</h2>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline">{language}</Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56">
+              {languageItems.map((item:any) => (
+                <DropdownMenuItem key={item.key} onClick={() => setLanguage(item.value)}>
+                  <p className="block py-2 px-3 rounded" >
+                    {item.value}
+                  </p>
+                </DropdownMenuItem>
+              ))}
             </DropdownMenuContent>
           </DropdownMenu>
           <h2 className="text-lg font-semibold mt-8 mb-4">Audio Files</h2>

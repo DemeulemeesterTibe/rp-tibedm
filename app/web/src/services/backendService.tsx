@@ -77,4 +77,12 @@ export class BackendService {
         });
         return response.json();
     }
+
+    async sendAudioFile(file:any) {
+        const response = await fetch(this.baseUrl + "/get/text/from/audio", {
+            method: "POST",
+            body: file,
+        });
+        return response.json();
+    }
 }

@@ -13,6 +13,8 @@ import { BackendService } from "@/services/backendService"
 export function DemoChat() {
   const backendService = new BackendService()
   
+  const [audioData, setAudioData] = useState(null);
+  const [loading, setLoading] = useState(false)
   const [modelItems, setModelItems] = useState([])
   const [model, setModel] = useState("No model selected")
   const [speaker, setSpeaker] = useState("Select a model first")
@@ -67,7 +69,21 @@ export function DemoChat() {
     })
   }, [])
 
+  const playWavFile = (base64Audio:any) => {
+    const decodedAudio = atob(base64Audio);
+    const audioArray = new Uint8Array(decodedAudio.length);
+    for (let i = 0; i < decodedAudio.length; i++) {
+        audioArray[i] = decodedAudio.charCodeAt(i);
+    }
 
+    const audioBlob = new Blob([audioArray], { type: 'audio/wav' });
+    const audioUrl = URL.createObjectURL(audioBlob);
+    console.log(audioUrl)
+
+    const audio = new Audio(audioUrl);
+
+    audio.play();
+  }
   
   const addMessage = (message:any,speaker:string) => {
     if (speaker !== "User" && speaker !== "Openai") {
@@ -77,8 +93,11 @@ export function DemoChat() {
     setMessages([...messages, {key: messages.length + 1, value: message, speaker: speaker}])
   }
 
-
-  const sendMessage = () => {
+  const sendMessage = async () => {
+    if (loading) {
+      
+      return;
+    }
     if(speaker === "Select a model first" || speaker === "Wait for model to load" || speaker === "Loading speaker..." || speaker === "Choose speaker") {
       return;
     }
@@ -89,16 +108,21 @@ export function DemoChat() {
       console.log("empty input")
       return;
     }
-    addMessage(input.value,"User")
-    backendService.getChatbotResponse(messages).then((res) => {
-      console.log(res)
-      console.log(messages)
-      setMessages(prevMessages => [
-        ...prevMessages,
-        { key: prevMessages.length + 1, value: res["text"], speaker: "Openai" },
-      ]);
-    })
+    const inputValue = input.value
+    input.value = ""
+    setLoading(true)
+    addMessage(inputValue,"User")
+    const json = await backendService.getChatbotResponse(messages)
+    console.log(json)
+    setMessages(prevMessages => [
+      ...prevMessages,
+      { key: prevMessages.length + 1, value: json["text"], speaker: "Openai" },
+    ]);
+    setAudioData(json["audio"])
+    playWavFile(json["audio"])
+
     console.log("send button pressed")
+    setLoading(false)
   }
 
   const checkKey = (e:any) => {
@@ -167,6 +191,14 @@ export function DemoChat() {
             }
             </DropdownMenuContent>
           </DropdownMenu>
+          <h2 className="text-lg font-semibold mt-8 mb-4">Audio Files</h2>
+          <div className="w-full space-y-4">
+            { audioData && <audio className="w-full" controls>
+              <source src={`data:audio/wav;rate=24000;base64,${audioData}`} type="audio/wav" />
+              {/* <source src={`data:audio/wav;rate=24000,${audioData}`} type="audio/wav" /> */}
+              Your browser does not support the audio element.
+            </audio>}
+          </div>
         </aside>
         <main className="flex-1 p-6">
           <div className="flex flex-col h-full">

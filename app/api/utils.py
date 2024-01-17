@@ -1,7 +1,10 @@
 import base64
+import os
+import tempfile
 from TTS.tts.configs.xtts_config import XttsConfig
 from TTS.tts.models.xtts import Xtts
 import torch
+import torchaudio
 
 def clear_gpu_cache():
     """Clears the GPU cache."""
@@ -50,16 +53,24 @@ def run_tts(model,lang,text,speaker_inf):
         top_p=model.config.top_p,
         # enable_text_splitting=True
     )
-    # save it as a wav file
-    audio_tensor = torch.from_numpy(out["wav"])
 
-    # Convert the torch tensor to cpu memory
-    audio_cpu = audio_tensor.cpu()
+    out["wav"] = torch.tensor(out["wav"]).unsqueeze(0)
 
-    # Convert the cpu tensor to a numpy array
-    audio = audio_cpu.numpy()
+    # Create a temporary file to save the audio
+    with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as temp_file:
+        torchaudio.save(temp_file.name, out["wav"], 24000, bits_per_sample = 16)
+        temp_file_path = temp_file.name
+    
+    # torchaudio.save("test.wav", out["wav"], 24000)
 
-    # Save it as a wav file
-    audio = audio.tobytes()
-    wav_base64 = base64.b64encode(audio)
+    # Read the contents of the temporary file
+    with open(temp_file_path, 'rb') as temp_file:
+        file_content = temp_file.read()
+
+    # Encode the contents in base64
+    wav_base64 = base64.b64encode(file_content).decode('utf-8')
+
+    # Delete the temporary file
+    os.remove(temp_file_path)
+
     return wav_base64

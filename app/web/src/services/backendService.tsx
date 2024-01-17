@@ -1,10 +1,10 @@
-import { list } from "postcss";
-import { List } from "postcss/lib/list";
+require('dotenv').config();
 
 export class BackendService {
     baseUrl: string;
     constructor() {
-        this.baseUrl = "http://localhost:8000";
+        // console.log(process.env.BACKEND_URL)
+        this.baseUrl = process.env.BACKEND_URL as string;
     }
 
     async getModels() {

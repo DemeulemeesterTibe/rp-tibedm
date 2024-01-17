@@ -41,6 +41,19 @@ def run_tts(model,lang,text,speaker_inf):
     Returns: audio
     """
 
+    # check if text is more than 250 tokens
+    tokenizer = model.tokenizer
+    text_splitting = False
+
+    number_of_tokens = len(tokenizer.encode(text,lang))
+
+    print(f"Number of tokens: {number_of_tokens}")
+
+    if number_of_tokens > 250:
+        text_splitting = True
+
+    print(f"Text splitting: {text_splitting}")
+    
     out = model.inference(
         text=text,
         language=lang,
@@ -51,7 +64,7 @@ def run_tts(model,lang,text,speaker_inf):
         repetition_penalty=model.config.repetition_penalty,
         top_k=model.config.top_k,
         top_p=model.config.top_p,
-        # enable_text_splitting=True
+        enable_text_splitting=text_splitting
     )
 
     out["wav"] = torch.tensor(out["wav"]).unsqueeze(0)

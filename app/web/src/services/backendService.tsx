@@ -67,13 +67,13 @@ export class BackendService {
         return response.json();
     }
 
-    async getChatbotResponse(messages:any) {
+    async getChatbotResponse(messages:any,language:string) {
         const response = await fetch(this.baseUrl + "/run/openai/completion", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(messages),
+            body: JSON.stringify({messages:messages,language:language}),
         });
         return response.json();
     }

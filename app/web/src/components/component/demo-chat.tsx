@@ -30,6 +30,22 @@ export function DemoChat() {
     key: 2,
     value: "Dutch",
     short: "nl"
+  }, {
+    key: 3,
+    value: "French",
+    short: "fr"
+  }, {
+    key: 4,
+    value: "German",
+    short: "de"
+  }, {
+    key: 5,
+    value: "Italian",
+    short: "it"
+  }, {
+    key: 6,
+    value: "Spanish",
+    short: "es"
   }
 ])
 
@@ -129,7 +145,8 @@ export function DemoChat() {
   useEffect(() => {
     // check if the new message is from the user
     if (messages[messages.length - 1].speaker === "User") {
-        backendService.getChatbotResponse(messages).then((res) => {
+        setAudioData(null)
+        backendService.getChatbotResponse(messages,language).then((res) => {
           // console.log(res)
           addMessage(res["text"],"Openai")
           setAudioData(res["audio"])
@@ -141,9 +158,11 @@ export function DemoChat() {
 
   const sendMessage = async () => {
     if (loading) {
+      console.log("loading")
       return;
     }
     if(speaker === "Select a model first" || speaker === "Wait for model to load" || speaker === "Loading speaker..." || speaker === "Choose speaker") {
+      console.log("no speaker selected")
       return;
     }
 

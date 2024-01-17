@@ -2,12 +2,15 @@ version: "3.9"
 
 services:
   api:
+    container_name: api
     build: 
       context: ./api
       dockerfile: Dockerfile
     image: demeulemeestertibe/rp-api
     ports:
       - "8000:8000"
+    expose:
+      - 8000
     volumes:
       - ./api:/app
     deploy:
@@ -17,8 +20,18 @@ services:
             - driver: nvidia
               count: 1
               capabilities: [gpu]
+    env_file:
+      - api.env
+    networks:
+      - api-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/healthcheck"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   web:
+    container_name: web
     build: 
       context: ./web
       dockerfile: Dockerfile
@@ -27,3 +40,13 @@ services:
       - "3000:3000"
     volumes:
       - ./web:/app
+    env_file:
+      - web.env
+    networks:
+      - api-network
+    depends_on:
+      api:
+        condition: service_healthy
+
+networks:
+  api-network:

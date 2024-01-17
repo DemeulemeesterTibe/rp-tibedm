@@ -3,14 +3,16 @@ require('dotenv').config();
 export class BackendService {
     baseUrl: string;
     constructor() {
-        // console.log(process.env.BACKEND_URL)
+        console.log(process.env.BACKEND_URL)
         this.baseUrl = process.env.BACKEND_URL as string;
     }
 
     async getModels() {
         const response = await fetch(this.baseUrl + "/get/models", {
             method: "GET",
-            headers: {},
+            headers: {
+                "Content-Type": "application/json",
+            },
         });
         return response.json();
     }
@@ -38,7 +40,9 @@ export class BackendService {
     async getSelectedModel() {
         const response = await fetch(this.baseUrl + "/get/selected/model", {
             method: "GET",
-            headers: {},
+            headers: {
+                "Content-Type": "application/json",
+            },
         });
         return response.json();
     }
@@ -46,7 +50,9 @@ export class BackendService {
     async getSpeakers() {
         const response = await fetch(this.baseUrl + "/get/model/speakers", {
             method: "GET",
-            headers: {},
+            headers: {
+                "Content-Type": "application/json",
+            },
         });
         return response.json();
     }
@@ -54,7 +60,9 @@ export class BackendService {
     async getSelectedSpeaker() {
         const response = await fetch(this.baseUrl + "/get/selected/speaker", {
             method: "GET",
-            headers: {},
+            headers: {
+                "Content-Type": "application/json",
+            },
         });
         return response.json();
     }
@@ -62,7 +70,9 @@ export class BackendService {
     async getChatbotResponse(messages:any) {
         const response = await fetch(this.baseUrl + "/run/openai/completion", {
             method: "POST",
-            headers: {},
+            headers: {
+                "Content-Type": "application/json",
+            },
             body: JSON.stringify(messages),
         });
         return response.json();

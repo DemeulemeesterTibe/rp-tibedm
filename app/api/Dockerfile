@@ -2,6 +2,7 @@ ARG BASE=nvidia/cuda:11.8.0-base-ubuntu22.04
 FROM ${BASE}
 
 RUN apt-get update && \
+    apt-get install -y curl && \
     apt-get install -y --allow-unauthenticated --no-install-recommends \
     wget \
     && apt-get install -y python3-pip \
@@ -37,5 +38,7 @@ RUN pip3 install -r requirements.txt
 RUN conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia 
 
 COPY ./ ./
+
+EXPOSE 8000
 
 CMD ["python", "main.py"]

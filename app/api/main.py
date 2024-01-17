@@ -19,6 +19,25 @@ app.add_middleware(
     allow_headers=['*'],
 )
 
+LANGUAGES = {
+    'English': 'en',
+    'Spanish': 'es',
+    'French': 'fr',
+    'German': 'de',
+    'Italian': 'it',
+    'Portuguese': 'pt',
+    'Polish': 'pl',
+    'Turkish': 'tr',
+    'Russian': 'ru',
+    'Dutch': 'nl',
+    'Czech': 'cs',
+    'Arabic': 'ar',
+    'Chinese': 'zh-cn',
+    'Japanese': 'ja',
+    'Hungarian': 'hu',
+    'Korean': 'ko',
+    'Hindi': 'hi'
+}
 
 CLIENT_OPENAI = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
@@ -127,12 +146,18 @@ def runtts(lang: str, text: str):
 async def runOpenai(request: Request):
     global CLIENT_OPENAI
     try:
-        client_messages = await request.json()
+        json = await request.json()
+        client_messages = json['messages']
+        lang = json['language']
+
+        lang = LANGUAGES[lang]
         messages = [
             {"role": "user", "content": message['value']} if message['speaker'] == 'User' else
             {"role": "assistant", "content": message['value']}
             for message in client_messages
         ]
+        # add a new message to the beginning of the list
+        messages.insert(0, {"role": "system", "content": "You are a virtual assistant that always speaks in " + lang})
         response = CLIENT_OPENAI.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=messages,
@@ -141,7 +166,7 @@ async def runOpenai(request: Request):
 
         print(f"OpenAI completion completed for {text}")
 
-        out = run_tts(MODEL, 'en', text, SPEAKER_INF)
+        out = run_tts(MODEL, lang, text, SPEAKER_INF)
         # audio = None
 
         return {'status': 'OpenAI completion completed', 'text': text, 'audio': out}

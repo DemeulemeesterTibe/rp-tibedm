@@ -3,7 +3,7 @@ require('dotenv').config();
 export class BackendService {
     baseUrl: string;
     constructor() {
-        console.log(process.env.BACKEND_URL)
+        // console.log(process.env.BACKEND_URL)
         this.baseUrl = process.env.BACKEND_URL as string;
     }
 

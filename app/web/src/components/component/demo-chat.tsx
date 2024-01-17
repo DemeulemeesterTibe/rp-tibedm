@@ -6,13 +6,19 @@ import { Button } from "@/components/ui/button"
 import { DropdownMenuTrigger, DropdownMenuItem, DropdownMenuContent, DropdownMenu } from "@/components/ui/dropdown-menu"
 import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar"
 import { Input } from "@/components/ui/input"
-import { useEffect ,useState } from "react"
+import { useEffect ,useState, useRef } from "react"
 import { Navbar } from "@/components/component/navbar"
 import { BackendService } from "@/services/backendService"
 
 export function DemoChat() {
   const backendService = new BackendService()
-  
+  // const [backendService, setBackendService] = useState(new BackendService())
+
+  const [recording, setRecording] = useState(false);
+  const [audioBlob, setAudioBlob] = useState<Blob>(new Blob());
+  const mediaRecorder = useRef<MediaRecorder | null>(null);
+
+
   const [audioData, setAudioData] = useState(null);
   const [loading, setLoading] = useState(false)
   const [modelItems, setModelItems] = useState([])
@@ -20,13 +26,7 @@ export function DemoChat() {
   const [speaker, setSpeaker] = useState("Select a model first")
   const [speakerItems, setSpeakerItems] = useState([{
     key: 1,
-    value: "Speaker 1"
-  },{
-    key: 2,
-    value: "Speaker 2"
-  },{
-    key: 3,
-    value: "Speaker 3"
+    value: "Choose a model first"
   }])
   const [messages,setMessages] =useState(
     [{
@@ -82,20 +82,36 @@ export function DemoChat() {
 
     const audio = new Audio(audioUrl);
 
-    audio.play();
+    // audio.play();
   }
   
-  const addMessage = (message:any,speaker:string) => {
+  const addMessage = (message: any, speaker: string) => {
     if (speaker !== "User" && speaker !== "Openai") {
       console.error("Invalid speaker value. It must be 'User' or 'Openai'.");
       return; // or throw an error, depending on your desired behavior
-  }
-    setMessages([...messages, {key: messages.length + 1, value: message, speaker: speaker}])
-  }
+    }
+
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      { key: prevMessages.length + 1, value: message, speaker: speaker },
+    ]);
+  };
+
+  useEffect(() => {
+    // check if the new message is from the user
+    if (messages[messages.length - 1].speaker === "User") {
+        backendService.getChatbotResponse(messages).then((res) => {
+          // console.log(res)
+          addMessage(res["text"],"Openai")
+          setAudioData(res["audio"])
+          playWavFile(res["audio"])
+          setLoading(false)
+        })
+    }
+  }, [messages]);
 
   const sendMessage = async () => {
     if (loading) {
-      
       return;
     }
     if(speaker === "Select a model first" || speaker === "Wait for model to load" || speaker === "Loading speaker..." || speaker === "Choose speaker") {
@@ -112,17 +128,9 @@ export function DemoChat() {
     input.value = ""
     setLoading(true)
     addMessage(inputValue,"User")
-    const json = await backendService.getChatbotResponse(messages)
-    console.log(json)
-    setMessages(prevMessages => [
-      ...prevMessages,
-      { key: prevMessages.length + 1, value: json["text"], speaker: "Openai" },
-    ]);
-    setAudioData(json["audio"])
-    playWavFile(json["audio"])
-
     console.log("send button pressed")
-    setLoading(false)
+    // setLoading(false)
+    // set loading to false in useEffect of messages
   }
 
   const checkKey = (e:any) => {
@@ -148,10 +156,47 @@ export function DemoChat() {
     setSpeaker(speaker)
   }
 
+  const startRecording = () => {
+    navigator.mediaDevices.getUserMedia({ audio: true })
+      .then((stream) => {
+        console
+        mediaRecorder.current = new MediaRecorder(stream);
+        const chunks:any = [];
+
+        mediaRecorder.current.ondataavailable = (e:any) => {
+          if (e.data.size > 0) {
+            chunks.push(e.data);
+          }
+        };
+
+        mediaRecorder.current.onstop = () => {
+          const blob:any = new Blob(chunks, { type: 'audio/wav' });
+          setAudioBlob(blob);
+          const audioUrl = URL.createObjectURL(blob);
+          console.log(audioUrl)
+          const audio = new Audio(audioUrl);
+          audio.play();
+        };
+
+        mediaRecorder.current.start();
+        setRecording(true);
+      })
+      .catch((error) => {
+        console.error('Error accessing microphone:', error);
+      });
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorder.current && mediaRecorder.current.state === 'recording') {
+      mediaRecorder.current.stop();
+      setRecording(false);
+    }
+  };
+
   return (
     <div key="1" className="flex flex-col h-screen bg-gray-100 dark:bg-gray-900">
       <Navbar />
-      <div className="flex h-full">
+      <div className="flex h-full overflow-y-auto">
         <aside className="w-64 bg-white dark:bg-gray-800 border-r dark:border-gray-700 p-4">
           <h2 className="text-lg font-semibold mb-4">Models</h2>
           <DropdownMenu>
@@ -200,9 +245,9 @@ export function DemoChat() {
             </audio>}
           </div>
         </aside>
-        <main className="flex-1 p-6">
+        <main className="flex-1 p-6 overflow-y-auto">
           <div className="flex flex-col h-full">
-            <div className="flex-1 overflow-y-auto">
+            <div className="flex-1 overflow-y-auto" >
               <div className="flex flex-col space-y-4">
                 {messages.map((item) => (
                   (item.speaker === "Openai") ?(
@@ -221,7 +266,7 @@ export function DemoChat() {
                         <p>{item.value}</p>
                       </div>
                       <Avatar className="w-10 h-10">
-                        <AvatarImage alt="Speaker 2" src="/user.png" />
+                        <AvatarImage alt="Speaker 2" src="/user.jpg" />
                         <AvatarFallback>S2</AvatarFallback>
                       </Avatar>
                     </div>
@@ -232,9 +277,15 @@ export function DemoChat() {
             <div className="mt-4 border-t dark:border-gray-700 pt-4">
               <div className="flex">
                 <Input className="flex-1 mr-2" placeholder="Type your message..." onKeyPress={checkKey}/>
-                <Button variant="dark" className="ml-2 mr-4" type="button">
+                {/* <Button variant="dark" className="ml-2 mr-4" type="button">
                   <img alt="Microphone" className="h-6 w-6" src="/mic.svg" />
                   <span className="sr-only">Record voice</span>
+                </Button> */}
+                <Button variant="dark" className={`ml-2 mr-4`}
+                  onClick={recording ? stopRecording : startRecording}
+                  type="button"
+                >
+                  {recording ? 'Stop Recording' : 'Record Voice'}
                 </Button>
                 <Button variant="dark" onClick={sendMessage}>Send</Button>
               </div>

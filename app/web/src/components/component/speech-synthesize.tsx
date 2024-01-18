@@ -68,9 +68,6 @@ export function SpeechSynthesize() {
   const handleFileChange = (event:any) => {
     const file = event.target.files[0];
     if (!file) return;
-    console.log(file);
-    console.log(file.type);
-    console.log(typeof file)
     setRefAudio(file);
   }
 
@@ -84,14 +81,22 @@ export function SpeechSynthesize() {
       console.log("empty input or too short")
       return;
     }
+    setResultAudio(null);
     const text = input.value;
 
     const formData = new FormData();
     formData.append("text", text);
     formData.append("audio", refAudio);
-    // formData.append("language", language);
+    formData.append("language", language);
     const res = await backendService.synthesize(formData);
     console.log(res);
+    setResultAudio(res["audio"]);
+  }
+
+  const checkKey = (e:any) => {
+    if (e.key === 'Enter') {
+      synthesize();
+    }
   }
 
   return (
@@ -112,10 +117,10 @@ export function SpeechSynthesize() {
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">
               {languageItems.map((item) => (
-                <DropdownMenuItem key={item.key}>
-                  <button onClick={() => setLanguage(item.value)} className="block py-2 px-3 rounded">
+                <DropdownMenuItem key={item.key} onClick={() => setLanguage(item.value)} >
+                  <p className="block py-2 px-3 rounded" >
                     {item.value}
-                  </button>
+                  </p>
                 </DropdownMenuItem>
               ))}
                 {/* <DropdownMenuItem >
@@ -141,7 +146,7 @@ export function SpeechSynthesize() {
               <Label htmlFor="audio-result">Result Audio</Label>
               <div className="">
               {resultAudio && <audio controls id="reference-audio">
-                  <source src={URL.createObjectURL(resultAudio)} type={resultAudio.type} />
+                  <source src={`data:audio/wav;rate=24000;base64,${resultAudio}`} type="audio/wav" />
                   Your browser does not support the audio element.
                   </audio>
                   }
@@ -149,7 +154,7 @@ export function SpeechSynthesize() {
             </div>
           </div>
           <div className="flex items-center gap-4 w-full max-w-lg absolute bottom-10">
-            <Input className="flex-1" id="synthesize-text" placeholder="Enter text to synthesize" type="text" />
+            <Input className="flex-1" id="synthesize-text" placeholder="Enter text to synthesize" type="text" onKeyPress={checkKey} />
             <Button className="ml-4 bg-black text-white" variant={"dark"} onClick={synthesize} >Synthesize</Button>
           </div>
         </main>

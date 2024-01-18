@@ -85,4 +85,12 @@ export class BackendService {
         });
         return response.json();
     }
+
+    async synthesize(formData:any) {
+        const response = await fetch(this.baseUrl + "/synthesize", {
+            method: "POST",
+            body: formData,
+        });
+        return response.json();
+    }
 }

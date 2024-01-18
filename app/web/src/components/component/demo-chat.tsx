@@ -18,6 +18,7 @@ declare global {
 
 export function DemoChat() {
 
+  const backendService = new BackendService()
   const recognitionRef = useRef<any>(null);
   const [transcript, setTranscript] = useState<string>("");
 
@@ -46,17 +47,30 @@ export function DemoChat() {
     key: 6,
     value: "Spanish",
     short: "es"
+  }, {
+    key: 7,
+    value: "Chinese",
+    short: "zh-cn"
+  }, {
+    key: 8,
+    value: "Japanese",
+    short: "ja"
+  }, {
+    key: 9,
+    value: "Korean",
+    short: "ko"
+  }, {
+    key: 10,
+    value: "Portuguese",
+    short: "pt"
+  }, {
+    key: 11,
+    value: "Russian",
+    short: "ru"
   }
 ])
-
-
-  const backendService = new BackendService()
-  // const [backendService, setBackendService] = useState(new BackendService())
-
   const [recording, setRecording] = useState(false);
   const [audioBlob, setAudioBlob] = useState<Blob>(new Blob());
-  // const mediaRecorder = useRef<MediaRecorder | null>(null);
-
 
   const [audioData, setAudioData] = useState(null);
   const [loading, setLoading] = useState(false)

@@ -5,40 +5,152 @@
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+import { Navbar } from "@/components/component/navbar"
+import { useState } from "react";
+import { BackendService } from "@/services/backendService"
+import { DropdownMenuTrigger, DropdownMenuItem, DropdownMenuContent, DropdownMenu } from "@/components/ui/dropdown-menu"
 
 export function SpeechSynthesize() {
+
+  const backendService = new BackendService();
+
+  const [refAudio, setRefAudio] = useState<any|null>(null);
+  const [resultAudio, setResultAudio] = useState<any|null>(null);
+
+  const [language, setLanguage] = useState("English")
+  const [languageItems, setLanguageItems] = useState([{
+    key: 1,
+    value: "English",
+    short: "en"
+  }, {
+    key: 2,
+    value: "Dutch",
+    short: "nl"
+  }, {
+    key: 3,
+    value: "French",
+    short: "fr"
+  }, {
+    key: 4,
+    value: "German",
+    short: "de"
+  }, {
+    key: 5,
+    value: "Italian",
+    short: "it"
+  }, {
+    key: 6,
+    value: "Spanish",
+    short: "es"
+  }, {
+    key: 7,
+    value: "Chinese",
+    short: "zh-cn"
+  }, {
+    key: 8,
+    value: "Japanese",
+    short: "ja"
+  }, {
+    key: 9,
+    value: "Korean",
+    short: "ko"
+  }, {
+    key: 10,
+    value: "Portuguese",
+    short: "pt"
+  }, {
+    key: 11,
+    value: "Russian",
+    short: "ru"
+  }
+])
+
+  const handleFileChange = (event:any) => {
+    const file = event.target.files[0];
+    if (!file) return;
+    console.log(file);
+    console.log(file.type);
+    console.log(typeof file)
+    setRefAudio(file);
+  }
+
+  const synthesize = async () => {
+    if (!refAudio) {
+      console.log("no reference audio")
+      return;
+    }
+    const input = document.getElementById("synthesize-text") as HTMLInputElement;
+    if (!input.value || !input.value.trim() || input.value.length < 5) {
+      console.log("empty input or too short")
+      return;
+    }
+    const text = input.value;
+
+    const formData = new FormData();
+    formData.append("text", text);
+    formData.append("audio", refAudio);
+    // formData.append("language", language);
+    const res = await backendService.synthesize(formData);
+    console.log(res);
+  }
+
   return (
     <div key="1" className="flex flex-col h-screen bg-gray-100 dark:bg-gray-900">
-      <div className="flex h-full">
+      <Navbar />
+      <div className="flex h-full overflow-y-hidden">
         <main className="flex-1 p-6 overflow-y-auto space-y-6 flex flex-col items-center">
           <h2 className="text-3xl font-bold mb-4">Synthesize Speech Using Reference Audio</h2>
           <div className="flex items-center justify-between gap-8 w-full max-w-lg">
             <Label htmlFor="audio-upload">Upload Audio</Label>
-            <Input accept="audio/*" className="flex w-3/5" id="audio-upload" type="file" />
+            <Input accept="audio/*" className="flex w-3/5" id="audio-upload" type="file" onChange={handleFileChange} />
+          </div>
+          <div className="flex items-center justify-between gap-8 w-full max-w-lg">
+            <Label htmlFor="audio-upload">Language of the text to synthesize</Label>
+            <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline">{language}</Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56">
+              {languageItems.map((item) => (
+                <DropdownMenuItem key={item.key}>
+                  <button onClick={() => setLanguage(item.value)} className="block py-2 px-3 rounded">
+                    {item.value}
+                  </button>
+                </DropdownMenuItem>
+              ))}
+                {/* <DropdownMenuItem >
+                  <p className="block py-2 px-3 rounded" >
+                    test
+                  </p>
+                </DropdownMenuItem> */}
+            </DropdownMenuContent>
+          </DropdownMenu>
           </div>
           <div className="flex flex-col gap-8 w-full max-w-lg">
             <div className="flex gap-4 justify-between items-center">
               <Label htmlFor="reference-audio">Reference Audio</Label>
               <div className="">
-                <audio controls id="reference-audio">
-                  <source src="/placeholder-audio.mp3" type="audio/wav" />
+                {refAudio && <audio controls id="reference-audio">
+                  <source src={URL.createObjectURL(refAudio)} type={refAudio.type} />
                   Your browser does not support the audio element.
-                </audio>
+                  </audio>
+                  }
               </div>
             </div>
             <div className="flex gap-4 justify-between items-center">
               <Label htmlFor="audio-result">Result Audio</Label>
               <div className="">
-                <audio controls id="audio-result">
-                  <source src="/placeholder-audio.mp3" type="audio/wav" />
+              {resultAudio && <audio controls id="reference-audio">
+                  <source src={URL.createObjectURL(resultAudio)} type={resultAudio.type} />
                   Your browser does not support the audio element.
-                </audio>
+                  </audio>
+                  }
               </div>
             </div>
           </div>
           <div className="flex items-center gap-4 w-full max-w-lg absolute bottom-10">
             <Input className="flex-1" id="synthesize-text" placeholder="Enter text to synthesize" type="text" />
-            <Button className="ml-4 bg-black text-white" variant={"dark"}>Synthesize</Button>
+            <Button className="ml-4 bg-black text-white" variant={"dark"} onClick={synthesize} >Synthesize</Button>
           </div>
         </main>
       </div>

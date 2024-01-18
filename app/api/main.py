@@ -1,6 +1,6 @@
 import base64
 import numpy as np
-from fastapi import FastAPI, File, UploadFile, Request
+from fastapi import FastAPI, File, Form, UploadFile, Request
 from fastapi.middleware.cors import CORSMiddleware
 import os
 from utils import *
@@ -173,6 +173,25 @@ async def runOpenai(request: Request):
     except Exception as e:
         print(f"Error: {e}")
         return {'status': 'Error during OpenAI completion', 'error_message': str(e)}
+
+@app.post('/synthesize')
+async def synthesize(request: Request, text: str = Form(...), language: str = Form(...), audio: UploadFile = File(...)):
+    try:
+        # Use 'text' and 'audio' directly from the parameters
+        print("Text:", text)
+        print("Audio filename:", audio.filename)
+        print("Audio content type:", language)
+        short_lang = LANGUAGES[language]
+
+        # Process the audio file or do any other required operations
+        # For example, you can save the audio file:
+        with open(audio.filename, 'wb') as f:
+            f.write(audio.file.read())
+
+        return {'status': 'Synthesis success'}
+    except Exception as e:
+        print(f"Error: {e}")
+        return {'status': 'Error during synthesis', 'error_message': str(e)}
     
 
 if __name__ == '__main__':

@@ -87,3 +87,34 @@ def run_tts(model,lang,text,speaker_inf):
     os.remove(temp_file_path)
 
     return wav_base64
+
+def synthFromFile(model,lang,text,config,audio_path):
+    """
+    Runs the given text through the given model.
+    model: XTTS model
+    lang: language of the speaker
+    text: text to synthesize
+    Returns: audio
+    """
+
+    out = model.synthesize(text=text,config=config,
+                       language=lang,speaker_wav=audio_path)
+    
+    out["wav"] = torch.tensor(out["wav"]).unsqueeze(0)
+
+    # Create a temporary file to save the audio
+    with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as temp_file:
+        torchaudio.save(temp_file.name, out["wav"], 24000, bits_per_sample = 16)
+        temp_file_path = temp_file.name
+
+    # Read the contents of the temporary file
+    with open(temp_file_path, 'rb') as temp_file:
+        file_content = temp_file.read()
+
+    # Encode the contents in base64
+    wav_base64 = base64.b64encode(file_content).decode('utf-8')
+
+    # Delete the temporary file
+    os.remove(temp_file_path)
+    
+    return wav_base64

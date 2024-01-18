@@ -176,22 +176,33 @@ async def runOpenai(request: Request):
 
 @app.post('/synthesize')
 async def synthesize(request: Request, text: str = Form(...), language: str = Form(...), audio: UploadFile = File(...)):
+    if MODEL is None:
+        return {'status': 'No model selected'}
     try:
         # Use 'text' and 'audio' directly from the parameters
         print("Text:", text)
         print("Audio filename:", audio.filename)
         print("Audio content type:", language)
+        if language not in LANGUAGES:
+            return {'status': 'Language not supported'}
+        
         short_lang = LANGUAGES[language]
 
         # Process the audio file or do any other required operations
         # For example, you can save the audio file:
-        with open(audio.filename, 'wb') as f:
-            f.write(audio.file.read())
+        with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as temp_file:
+            with open(temp_file.name, 'wb') as f:
+                f.write(audio.file.read())
+            temp_file_path = temp_file.name
 
-        return {'status': 'Synthesis success'}
+        out = synthFromFile(MODEL, short_lang, text, MODEL.config, temp_file_path)
+
+        os.remove(temp_file_path)
+
+        return {'status': 'Synthesis success', 'audio': out}
     except Exception as e:
         print(f"Error: {e}")
-        return {'status': 'Error during synthesis', 'error_message': str(e)}
+        return {'status': 'Error during synthesis'}
     
 
 if __name__ == '__main__':

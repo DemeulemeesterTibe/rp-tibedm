@@ -18,9 +18,10 @@ RUN npm run build
 
 # Set environment variables
 ENV PORT 3000
+ENV BACKEND_URL=http://localhost:8000
 
 # Expose the port that the app will run on
 EXPOSE 3000
 
 # Command to run the application
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "start"]

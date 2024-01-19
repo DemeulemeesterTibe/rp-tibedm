@@ -30,3 +30,5 @@ app/web.env
 app/api/.env
 app/api/test.wav
 app/api.env
+
+trainPipeline/__pycache__/

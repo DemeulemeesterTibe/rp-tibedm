@@ -104,6 +104,10 @@ export function SpeechSynthesize() {
     }
   }
 
+  const removeRefAudio = () => {
+    setRefAudio(null);
+  }
+
   return (
     <div key="1" className="flex flex-col h-screen bg-gray-100 dark:bg-gray-900">
       <Navbar />
@@ -112,7 +116,7 @@ export function SpeechSynthesize() {
           <h2 className="text-3xl font-bold mb-4">Synthesize Speech Using Reference Audio</h2>
           <div className="flex items-center justify-between gap-8 w-full max-w-lg">
             <Label htmlFor="audio-upload">Upload Audio</Label>
-            <Input accept="audio/*" className="flex w-3/5" id="audio-upload" type="file" onChange={handleFileChange} />
+            <Input accept="audio/*" className="flex w-3/5" id="audio-upload" type="file" onChange={handleFileChange} onClick={removeRefAudio} />
           </div>
           <div className="flex items-center justify-between gap-8 w-full max-w-lg">
             <Label htmlFor="audio-upload">Language of the text to synthesize</Label>

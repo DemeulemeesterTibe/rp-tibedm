@@ -157,7 +157,7 @@ async def runOpenai(request: Request):
             for message in client_messages
         ]
         # add a new message to the beginning of the list
-        messages.insert(0, {"role": "system", "content": "You are a virtual assistant that always speaks in " + lang})
+        messages.insert(0, {"role": "system", "content": "You are a virtual assistant that always speaks in " + lang + "Always keep your answers short and concise under 300 characters."})
         response = CLIENT_OPENAI.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=messages,

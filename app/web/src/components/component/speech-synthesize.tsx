@@ -17,6 +17,8 @@ export function SpeechSynthesize() {
   const [refAudio, setRefAudio] = useState<any|null>(null);
   const [resultAudio, setResultAudio] = useState<any|null>(null);
 
+  const [loading, setLoading] = useState(false);
+
   const [language, setLanguage] = useState("English")
   const [languageItems, setLanguageItems] = useState([{
     key: 1,
@@ -72,6 +74,7 @@ export function SpeechSynthesize() {
   }
 
   const synthesize = async () => {
+    if (loading) return;
     if (!refAudio) {
       console.log("no reference audio")
       return;
@@ -81,6 +84,7 @@ export function SpeechSynthesize() {
       console.log("empty input or too short")
       return;
     }
+    setLoading(true);
     setResultAudio(null);
     const text = input.value;
 
@@ -91,6 +95,7 @@ export function SpeechSynthesize() {
     const res = await backendService.synthesize(formData);
     console.log(res);
     setResultAudio(res["audio"]);
+    setLoading(false);
   }
 
   const checkKey = (e:any) => {
@@ -123,11 +128,6 @@ export function SpeechSynthesize() {
                   </p>
                 </DropdownMenuItem>
               ))}
-                {/* <DropdownMenuItem >
-                  <p className="block py-2 px-3 rounded" >
-                    test
-                  </p>
-                </DropdownMenuItem> */}
             </DropdownMenuContent>
           </DropdownMenu>
           </div>

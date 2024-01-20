@@ -1,5 +1,6 @@
 import argparse
 import json
+import os
 from utils import *
 
 def main():
@@ -22,6 +23,21 @@ def main():
     batch_size = config['batch_size']
     grad_acum = config['grad_acum']
     max_audio_length = config['max_audio_length']
+    extract_vocals = config['extract_vocals']
+
+    if extract_vocals:
+        print("Extracting vocals from audio files...")
+        vocal_model_path = os.path.join("vocal-remover", "models", "baseline.pth")
+        for speaker, audio_files in audio_speaker_list.items():
+            new_audio_files = []
+            for audio_file in audio_files:
+                new_audio = extract_vocals_from_audio(audio_file,dataset_path,vocal_model_path)
+                new_audio_files.append(new_audio)
+            audio_speaker_list[speaker] = new_audio_files
+        import pprint
+        pprint.pprint(audio_speaker_list)
+        # audio_speaker_list = extract_vocals_from_audio(audio_speaker_list)
+        print("Done extracting vocals from audio files")
 
     print("Creating dataset...")
     

@@ -24,7 +24,8 @@ Or import the env using the [xtssConda.yaml](xtssConda.yaml) file
 
 ## Fine-Tuning a XTSS 2.0 model locally
 
-1. Update the [config.json](config.json) file to point to your data and your config of training 
+1. Make sure you have downloaded this [Github repo](https://github.com/tsurumeso/vocal-remover/releases/tag/v5.1.0) with `baseline.pth` file in the models folder
+2. Update the [config.json](config.json) file to point to your data and your config of training 
     - `out_path` – The folder where the dataset will be created and where the runs of the model will be saved.
     - `audio_speaker_list` – A dictionary containing speaker names as keys and lists of corresponding audio file paths as values.
     - `eval_percentage` – The percentage of the dataset to be used for evaluation during training.
@@ -33,7 +34,8 @@ Or import the env using the [xtssConda.yaml](xtssConda.yaml) file
     - `batch_size` – The number of training examples utilized in one iteration.
     - `grad_acum` – The number of batches to accumulate gradients before performing a backward/update pass. It is recommended to make sure that `batch_size` * `grad_acum` is atleast 252 for more efficient training.
     - `max_audio_length` – The maximum duration (in seconds) of an audio clip.
-2. Go into the coqui_xtss folder and run [xtssPipeline.py](xtssPipeline.py) using this command:
+    - `extract_vocals` - True or false for if you want to first remove all the background noise out of the audio
+3. Go into the coqui_xtss folder and run [xtssPipeline.py](xtssPipeline.py) using this command:
     ```bash
         python xtssPipeline.py -c config.json
     ```

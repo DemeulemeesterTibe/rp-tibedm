@@ -8,5 +8,6 @@
     "epochs": 50,
     "batch_size": 4,
     "grad_acum": 63,
-    "max_audio_length": 12
+    "max_audio_length": 12,
+    "extract_vocals": true
 }

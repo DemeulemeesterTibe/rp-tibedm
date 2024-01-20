@@ -1,6 +1,7 @@
 import gc
 import os
 import shutil
+import subprocess
 import pandas
 import platform
 from tqdm import tqdm
@@ -398,3 +399,20 @@ def train_model(language, train_csv, eval_csv, num_epochs, batch_size, grad_acum
     clear_gpu_cache()
     return config_path, vocab_file, ft_xtts_checkpoint, speaker_refs
 
+def extract_vocals_from_audio(audio_file,output_dir,model_path):
+    """
+    Extracts the vocals from an audio file.
+    audio_file: path to the audio file
+    model_path: path to the vocal remover model
+    Returns: path to the new audio file
+    """
+    os.makedirs(output_dir, exist_ok=True)
+    if torch.cuda.is_available():
+        subprocess.call(["python", "vocal-remover/inference.py", "--input", audio_file, "--gpu", "0", "--output_dir", output_dir, "--pretrained_model", model_path])
+    else:
+        subprocess.call(["python", "vocal-remover/inference.py", "--input", audio_file, "--output_dir", output_dir, "--pretrained_model", model_path])
+    instumental = os.path.basename(audio_file).split('.')[0]+"_Instruments.wav"
+    vocals = os.path.join(output_dir,os.path.basename(audio_file).split('.')[0]+"_Vocals.wav")
+    os.remove(os.path.join(output_dir,instumental))
+
+    return vocals

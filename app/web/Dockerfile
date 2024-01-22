@@ -5,7 +5,7 @@ FROM node:20-alpine
 WORKDIR /app
 
 # Copy package.json and package-lock.json to the working directory
-COPY package*.json ./
+COPY package*.json package-lock.json* ./
 
 # Install dependencies
 RUN npm install
@@ -18,7 +18,7 @@ RUN npm run build
 
 # Set environment variables
 ENV PORT 3000
-ENV BACKEND_URL=http://localhost:8000
+# ENV BACKEND_URL=http://localhost:8080
 
 # Expose the port that the app will run on
 EXPOSE 3000

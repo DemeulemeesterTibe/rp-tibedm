@@ -31,3 +31,7 @@ app/api/test.wav
 app/api.env
 
 trainPipeline/__pycache__/
+trainPipeline/log.out
+trainPipeline/dataset
+trainPipeline/runs
+log.out

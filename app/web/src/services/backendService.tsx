@@ -5,9 +5,11 @@ export class BackendService {
     constructor() {
         // console.log(process.env.BACKEND_URL)
         this.baseUrl = process.env.BACKEND_URL as string;
+        // console.log("baseUrl",this.baseUrl)
     }
 
     async getModels() {
+        // console.log(this.baseUrl + "/get/models")
         const response = await fetch(this.baseUrl + "/get/models", {
             method: "GET",
             headers: {

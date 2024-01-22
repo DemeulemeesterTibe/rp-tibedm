@@ -7,8 +7,8 @@ services:
       context: ./api
       dockerfile: Dockerfile
     image: demeulemeestertibe/rp-api
-    ports:
-      - "8000:8000"
+    # ports:
+    #   - "8000:8000"
     expose:
       - 8000
     volumes:

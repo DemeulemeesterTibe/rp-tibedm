@@ -1,4 +1,4 @@
-ARG BASE=nvidia/cuda:11.8.0-base-ubuntu22.04
+ARG BASE=nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu22.04
 FROM ${BASE}
 
 RUN apt-get update && \
@@ -41,6 +41,7 @@ COPY ./ ./
 
 EXPOSE 9000
 
-# ENV LD_LIBRARY_PATH /usr/local/cuda-11.8/lib64:$LD_LIBRARY_PATH
+# ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda-11.8/targets/x86_64-linux/lib/
+
 
 CMD ["python", "trainPipeline.py"]

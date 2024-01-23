@@ -26,16 +26,16 @@ SHELL ["/bin/bash", "--login", "-c"]
 
 WORKDIR /app
 
-COPY requirements.txt .
-
 RUN conda create --name api python=3.9 \
     && conda activate api \
     && echo "conda activate api" >> "${HOME}/.bashrc" \
     && source "${HOME}/.bashrc" 
 
-RUN pip3 install -r requirements.txt
-
 RUN conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia 
+
+COPY requirements.txt .
+
+RUN pip3 install -r requirements.txt
 
 COPY ./ ./
 

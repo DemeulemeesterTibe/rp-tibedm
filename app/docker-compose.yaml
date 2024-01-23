@@ -11,8 +11,6 @@ services:
       - "8000:8000"
     expose:
       - 8000
-    volumes:
-      - ./api:/app
     deploy:
       resources:
         reservations:
@@ -26,7 +24,7 @@ services:
       - api-network
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/healthcheck"]
-      interval: 5s
+      interval: 15s
       timeout: 10s
       retries: 3
 
@@ -38,12 +36,6 @@ services:
     image: demeulemeestertibe/rp-web
     ports:
       - "3000:3000"
-    # volumes:
-    #   - ./web:/app
-    # environment:
-    #   - BACKEND_URL=http://api:8000
-    # env_file:
-    #   - web.env
     networks:
       - api-network
     depends_on:

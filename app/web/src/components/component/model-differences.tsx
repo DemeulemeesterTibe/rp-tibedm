@@ -76,16 +76,16 @@ export function ModelDifferences() {
               </audio>
             </div>
             <div className="flex flex-col space-y-4 items-center">
-              <h3 className="text-2xl font-semibold">XTSS2</h3>
+              <h3 className="text-2xl font-semibold">Tortoise</h3>
               <audio controls>
-                <source src="/audio/modelDiff/obamaXtssFineTune.wav" type="audio/wav" />
+                <source src="/audio/modelDiff/obamaTortoiseFineTune.wav" type="audio/wav" />
                 Your browser does not support the audio element.
               </audio>
             </div>
             <div className="flex flex-col space-y-4 items-center">
-              <h3 className="text-2xl font-semibold">Tortoise</h3>
+              <h3 className="text-2xl font-semibold">XTSS2</h3>
               <audio controls>
-                <source src="/audio/modelDiff/obamaTortoiseFineTune.wav" type="audio/wav" />
+                <source src="/audio/modelDiff/obamaXtssFineTune.wav" type="audio/wav" />
                 Your browser does not support the audio element.
               </audio>
             </div>
@@ -97,13 +97,13 @@ export function ModelDifferences() {
             </div>
             <div className="flex flex-col space-y-4 items-center">
               <audio controls>
-                <source src="/audio/modelDiff/nathanXtssFineTune.wav" type="audio/wav" />
+                <source src="/audio/modelDiff/nathanTortoiseFineTune.wav" type="audio/wav" />
                 Your browser does not support the audio element.
               </audio>
             </div>
             <div className="flex flex-col space-y-4 items-center">
               <audio controls>
-                <source src="/audio/modelDiff/nathanTortoiseFineTune.wav" type="audio/wav" />
+                <source src="/audio/modelDiff/nathanXtssFineTune.wav" type="audio/wav" />
                 Your browser does not support the audio element.
               </audio>
             </div>

@@ -1,13 +1,14 @@
 {
     "out_path": "G:\\rp-tibedm\\tts_models\\coqui_xtss",
     "audio_speaker_list": {
-        "Nathan": ["G:\\rp-tibedm\\tts_models\\audio\\nathanCurated_short1.wav"]
+        "obama": ["G:\\rp-tibedm\\tts_models\\audio\\Obama_speech_Long.wav"],
+        "alanWake": ["G:\\rp-tibedm\\tts_models\\audio\\Alan_Wake_Voice_Long.wav"]
     },
     "eval_percentage": 0.15,
-    "language": "nl",
+    "language": "en",
     "epochs": 50,
     "batch_size": 4,
-    "grad_acum": 63,
+    "grad_acum": 62,
     "max_audio_length": 12,
-    "extract_vocals": true
+    "extract_vocals": false
 }

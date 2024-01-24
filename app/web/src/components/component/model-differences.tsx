@@ -66,19 +66,19 @@ export function ModelDifferences() {
               </audio>
             </div>
           </div>
-          <h2 className="text-2xl font-semibold mb-4 mt-4 text-center">Fine-Tune</h2>
+          <h2 className="text-2xl font-semibold mb-4 mt-4 text-center">Fine-Tuning a Model </h2>
           <div className="grid grid-cols-3 gap-8">
             <div className="flex flex-col space-y-4 items-center">
               <h3 className="text-2xl font-semibold">Reference Audio</h3>
               <audio controls>
-                <source src="/audiofile1.mp3" type="audio/wav" />
+                <source src="/audio/modelDiff/obamaRef.wav" type="audio/wav" />
                 Your browser does not support the audio element.
               </audio>
             </div>
             <div className="flex flex-col space-y-4 items-center">
               <h3 className="text-2xl font-semibold">XTSS2</h3>
               <audio controls>
-                <source src="/audiofile2.mp3" type="audio/wav" />
+                <source src="/audio/modelDiff/obamaXtssFineTune.wav" type="audio/wav" />
                 Your browser does not support the audio element.
               </audio>
             </div>
@@ -91,19 +91,50 @@ export function ModelDifferences() {
             </div>
             <div className="flex flex-col space-y-4 items-center">
               <audio controls>
-                <source src="/audiofile1.mp3" type="audio/wav" />
+                <source src="/audio/modelDiff/nathanRef.wav" type="audio/wav" />
                 Your browser does not support the audio element.
               </audio>
             </div>
             <div className="flex flex-col space-y-4 items-center">
               <audio controls>
-                <source src="/audiofile2.mp3" type="audio/wav" />
+                <source src="/audio/modelDiff/nathanXtssFineTune.wav" type="audio/wav" />
                 Your browser does not support the audio element.
               </audio>
             </div>
             <div className="flex flex-col space-y-4 items-center">
               <audio controls>
-                <source src="/audiofile3.mp3" type="audio/wav" />
+                <source src="/audio/modelDiff/nathanTortoiseFineTune.wav" type="audio/wav" />
+                Your browser does not support the audio element.
+              </audio>
+            </div>
+          </div>
+          <h2 className="text-2xl font-semibold mb-4 mt-4 text-center">Online models</h2>
+          <div className="grid grid-cols-4 gap-8">
+            <div className="flex flex-col space-y-4 items-center">
+              <h3 className="text-2xl font-semibold">Reference Audio</h3>
+              <audio controls>
+                <source src="/audio/modelDiff/tibeRef.wav" type="audio/wav" />
+                Your browser does not support the audio element.
+              </audio>
+            </div>
+            <div className="flex flex-col space-y-4 items-center">
+              <h3 className="text-2xl font-semibold">Play.ht</h3>
+              <audio controls>
+                <source src="/audio/modelDiff/tibePlay.wav" type="audio/wav" />
+                Your browser does not support the audio element.
+              </audio>
+            </div>
+            <div className="flex flex-col space-y-4 items-center">
+              <h3 className="text-2xl font-semibold">MyShell</h3>
+              <audio controls>
+                <source src="/audio/modelDiff/tibeMyShell.mp3" type="audio/mp3" />
+                Your browser does not support the audio element.
+              </audio>
+            </div>
+            <div className="flex flex-col space-y-4 items-center">
+              <h3 className="text-2xl font-semibold">Descript</h3>
+              <audio controls>
+                <source src="/audio/modelDiff/tibeDescript.wav" type="audio/wav" />
                 Your browser does not support the audio element.
               </audio>
             </div>

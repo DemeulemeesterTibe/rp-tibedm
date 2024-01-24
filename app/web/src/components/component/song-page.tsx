@@ -15,57 +15,57 @@ export function SongPage() {
             <div className="flex flex-col space-y-4 items-center">
               <h2 className="text-2xl font-semibold">Original vocals</h2>
               <audio controls>
-                <source src="/audio/PretVocals.wav" type="audio/wav" />
+                <source src="/audio/songs/PretVocals.wav" type="audio/wav" />
                 Your browser does not support the audio element.
               </audio>
             </div>
             <div className="flex flex-col space-y-4 items-center">
               <h2 className="text-2xl font-semibold">Speaker vocals</h2>
               <audio controls>
-                <source src="/audio/nathanPret.wav" type="audio/wav" />
+                <source src="/audio/songs/nathanPret.wav" type="audio/wav" />
                 Your browser does not support the audio element.
               </audio>
             </div>
             <div className="flex flex-col space-y-4 items-center">
               <h2 className="text-2xl font-semibold">Full song</h2>
               <audio controls>
-                <source src="/audio/nathanPret&RoapnFull.wav" type="audio/wav" />
+                <source src="/audio/songs/nathanPret&RoapnFull.wav" type="audio/wav" />
                 Your browser does not support the audio element.
               </audio>
             </div>
             <div className="flex flex-col space-y-4 items-center">
               <audio controls>
-                <source src="/audio/vocalsMambo.wav" type="audio/wav" />
+                <source src="/audio/songs/vocalsMambo.wav" type="audio/wav" />
                 Your browser does not support the audio element.
               </audio>
             </div>
             <div className="flex flex-col space-y-4 items-center">
               <audio controls>
-                <source src="/audio/nathanMambo.wav" type="audio/wav" />
+                <source src="/audio/songs/nathanMambo.wav" type="audio/wav" />
                 Your browser does not support the audio element.
               </audio>
             </div>
             <div className="flex flex-col space-y-4 items-center">
               <audio controls>
-                <source src="/audio/nathanMambo5Full.wav" type="audio/wav" />
+                <source src="/audio/songs/nathanMambo5Full.wav" type="audio/wav" />
                 Your browser does not support the audio element.
               </audio>
             </div>
             <div className="flex flex-col space-y-4 items-center">
               <audio controls>
-                <source src="/audio/pianomanvocals.wav" type="audio/wav" />
+                <source src="/audio/songs/pianomanvocals.wav" type="audio/wav" />
                 Your browser does not support the audio element.
               </audio>
             </div>
             <div className="flex flex-col space-y-4 items-center">
               <audio controls>
-                <source src="/audio/nathanPianoman.wav" type="audio/wav" />
+                <source src="/audio/songs/nathanPianoman.wav" type="audio/wav" />
                 Your browser does not support the audio element.
               </audio>
             </div>
             <div className="flex flex-col space-y-4 items-center">
               <audio controls>
-                <source src="/audio/nathanPianomanFull.wav" type="audio/wav" />
+                <source src="/audio/songs/nathanPianomanFull.wav" type="audio/wav" />
                 Your browser does not support the audio element.
               </audio>
             </div>

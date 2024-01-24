@@ -13,6 +13,9 @@ export function Navbar() {
             <Link className="text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400" href="/speech">
               Speech Synthesis
             </Link>
+            <Link className="text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400" href="/models">
+              Model Differences
+            </Link>
             <Link className="text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400" href="/songs">
               Songs
             </Link>

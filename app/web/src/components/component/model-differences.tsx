@@ -85,7 +85,7 @@ export function ModelDifferences() {
             <div className="flex flex-col space-y-4 items-center">
               <h3 className="text-2xl font-semibold">Tortoise</h3>
               <audio controls>
-                <source src="/audiofile3.mp3" type="audio/wav" />
+                <source src="/audio/modelDiff/obamaTortoiseFineTune.wav" type="audio/wav" />
                 Your browser does not support the audio element.
               </audio>
             </div>

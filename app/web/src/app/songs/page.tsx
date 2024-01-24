@@ -1,10 +1,7 @@
 "use client";
-import { Navbar } from "@/components/component/navbar"
+import { SongPage } from "@/components/component/song-page";
 export default function Songs() {
     return (
-        <div>
-            <Navbar />
-            <h1>Songs</h1>
-        </div>        
+        <SongPage />
     )
   }

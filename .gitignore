@@ -36,3 +36,5 @@ trainPipeline/dataset
 trainPipeline/runs
 trainPipeline/dockerData
 log.out
+
+app/web/public/audio/*.wav

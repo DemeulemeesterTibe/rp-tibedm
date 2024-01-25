@@ -17,7 +17,7 @@ After it is done building what can take quite a while then you can surf to [loca
 
 ### Installation Local
 
-1. Install [Nodejs](https://nodejs.org/en) and [Anaconda](https://www.anaconda.com/download).
+1. Install [Nodejs](https://nodejs.org/en), [Anaconda](https://www.anaconda.com/download) and Cuda and CUDNN using the [Nvidia docs](https://docs.nvidia.com/deeplearning/cudnn/install-guide/index.html#install-windows) .
 
 2. Open a Anaconda powershell prompt and run the following commands: 
     ```bash

@@ -9,7 +9,8 @@ When you have trained your model copy the folder that were you model is present 
 ## Installation of the app
 
 ### Installation using Docker
-Run the following command:
+Make sure you have Cuda and CUDNN installed you can do this using the [Nvidia docs](https://docs.nvidia.com/deeplearning/cudnn/install-guide/index.html#install-windows)
+Then run the following command:
 ```
 docker compose up 
 ```
@@ -17,7 +18,7 @@ After it is done building what can take quite a while then you can surf to [loca
 
 ### Installation Local
 
-1. Install [Nodejs](https://nodejs.org/en), [Anaconda](https://www.anaconda.com/download) and Cuda and CUDNN using the [Nvidia docs](https://docs.nvidia.com/deeplearning/cudnn/install-guide/index.html#install-windows) .
+1. Install [Nodejs](https://nodejs.org/en), [Anaconda](https://www.anaconda.com/download) and Cuda and CUDNN using the [Nvidia docs](https://docs.nvidia.com/deeplearning/cudnn/install-guide/index.html#install-windows).
 
 2. Open a Anaconda powershell prompt and run the following commands: 
     ```bash
@@ -49,9 +50,9 @@ After it is done building what can take quite a while then you can surf to [loca
 
 5. Now you can go to [http://localhost:3000](http://localhost:3000) to use the app
 
-### User manual
+## User manual
 
-Now that you have the app up and running through Docker or running local you can now use the app.
+Now that you have the app up and running through Docker or you have it running locally you can now use the app.
 There are 2 main pages you can use.
 
 The `Demo` page were have to do the following things to get audio files from chatgpt responses:

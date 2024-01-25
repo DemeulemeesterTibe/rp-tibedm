@@ -7,5 +7,3 @@ In this repo there are 3 main sections:
 - [tts_models](tts_models/README.md) where you see what I did to test the different models.
 
 For more information go to one of the folders and read the README files
-
-git submodule update --init --recursive

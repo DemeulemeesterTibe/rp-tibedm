@@ -11,6 +11,7 @@ tts_models/coqui_xtss/test_data/
 tts_models/coqui_xtss/runs/
 tts_models/coqui_xtss/*.wav
 tts_models/coqui_xtss/__pycache__/
+tts_models/coqui_xtss/vocal-remover/
 
 tts_models/nvidia_flowtron/*.pt
 

@@ -26,6 +26,10 @@ def main():
     extract_vocals = config['extract_vocals']
 
     if extract_vocals:
+        # check if vocal remover model exists
+        if not os.path.exists(os.path.join("vocal-remover", "models", "baseline.pth")):
+            print("Please download the vocal remover you can see how you do this in the README.md file")
+            exit(1)
         print("Extracting vocals from audio files...")
         vocal_model_path = os.path.join("vocal-remover", "models", "baseline.pth")
         for speaker, audio_files in audio_speaker_list.items():

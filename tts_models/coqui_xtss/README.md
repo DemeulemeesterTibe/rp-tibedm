@@ -4,7 +4,7 @@
 1. Firstly install cuda and cudnn using the [Nvidia docs](https://docs.nvidia.com/deeplearning/cudnn/install-guide/index.html#install-windows)
 2. Firstly create a conda env using the following command:
     ```bash
-        conda create -n xtss python=3.10
+        conda create -n xtss python=3.9
     ```
 3. Now activate your conda env:
     ```bash

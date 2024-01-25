@@ -43,7 +43,7 @@ CLIENT_OPENAI = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 MODEL = None
 MODEL_NAME = None
-MODEL_LIST = os.listdir('models')
+MODEL_LIST = [d for d in os.listdir("models") if os.path.isdir(os.path.join("models", d))]
 
 
 SPEAKER_INF = None
@@ -61,7 +61,7 @@ def default():
 @app.get('/get/models')
 def getModels():
     global MODEL_LIST
-    MODEL_LIST = os.listdir('models')
+    MODEL_LIST = [d for d in os.listdir("models") if os.path.isdir(os.path.join("models", d))]
     return MODEL_LIST
 
 @app.get('/get/selected/model')

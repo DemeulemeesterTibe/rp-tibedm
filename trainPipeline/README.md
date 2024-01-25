@@ -41,8 +41,8 @@ In the Gui you have the following field you can change
 - `Upload Training Data`: Upload an audio file or files of your speaker. Remember, better data leads to a better model.
 - `Language`: The language your speaker is speaking
 - `Epochs`: The number of times the model goes through the entire dataset. The higher the number the longer it takes to train.
-- `Batch size`: The batch size is used for training. If you encounter  **Cuda out of memory** errors, lower this value. 
-- `Gradient accumulation`: Ensure the **Gradient accumulation** * **batch size** is at least 252 for more stable training.
+- `Batch size`: The number of training examples utilized in one iteration. If you encounter  **Cuda out of memory** errors, lower this value. 
+- `Gradient accumulation`: The number of batches to accumulate gradients before performing a backward/update pass. Ensure that `batch_size` * `Gradient accumulation` is at least 252 for more efficient training.
 - `Max audio length`: The maximum  length of the audio for training in seconds. You can leave this default.
 - `Eval percentage`: The percentage of samples used for evaluating the model. You can leave this as the default.
 

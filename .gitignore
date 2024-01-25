@@ -19,7 +19,7 @@ tts_models/speechT5/dataset/
 
 tts_models/tortoise/*.wav
 
-app/api/models/
+app/api/models/*/
 app/api/__pycache__/
 
 app/web/node_modules/

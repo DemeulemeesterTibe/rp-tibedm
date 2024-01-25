@@ -2,7 +2,7 @@ tts_models/audio/*
 
 tts_models/dataset/
 
-tts_models/bark/speakers/
+tts_models/bark/speakers/*/*.npz
 tts_models/bark/bark/
 tts_models/bark/*.wav
 

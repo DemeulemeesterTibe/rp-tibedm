@@ -14,12 +14,12 @@ After it finishes building, which can take quite a while, you will receive a URL
 
 1. [Anaconda](https://www.anaconda.com/download), CUDA and cuDNN using the [Nvidia documentation](https://docs.nvidia.com/deeplearning/cudnn/install-guide/index.html#install-windows).
 
-2. Open a Anaconda Powershell prompt and run the following commands: 
+2. Open a Anaconda PowerShell prompt and run the following commands: 
     ```bash
-        Conda create -n gui python=3.9
-        Conda activate gui 
+        conda create -n gui python=3.9
+        conda activate gui 
     ```
-    Then navigate to the trainPipeline folder from the Anaconda powershell prompt
+    Then navigate to the trainPipeline folder from the Anaconda PowerShell prompt
     ```bash
         cd path/to/the/folder/rp-tibedm/trainPipeline
     ```

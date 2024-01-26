@@ -1,1 +1,1 @@
-Copy your trained models from the [Gui](../trainPipeline/README.md) or the [Cli](../tts_models/coqui_xtss/README.md) to here
+Copy your trained models from the [Gui](../../../trainPipeline/README.md) or the [Cli](../../../tts_models/coqui_xtss/README.md) to here

@@ -40,6 +40,8 @@ Alternatively, import the environment using the [xtssConda.yaml](xtssConda.yaml)
         python xtssPipeline.py -c config.json
     ```
 
+4. When it is done training you can find you trained model in the folder [runs](runs/)
+
 ## Model outputs
 
 Find some outputs of fine-tuned models in the [examples](examples/) directory

@@ -34,9 +34,9 @@ After it finishes building, which can take quite a while, you can go to [http://
 
 ## User manual
 
-Now that you have the Gui running through Docker or you have it running locally you can train your own TTS model. 
+Now that you have the GUI running through Docker or you have it running locally you can train your own TTS model. 
 
-In the Gui you have the following field you can change 
+In the GUI you have the following field you can change 
 - `Speaker name`: Enter the name of the speaker
 - `Upload Training Data`: Upload an audio file or files of your speaker. Remember, better data leads to a better model.
 - `Language`: The language your speaker is speaking

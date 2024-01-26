@@ -235,4 +235,4 @@ if __name__ == "__main__":
             )
             
 
-    demo.launch(debug=False,share=True)
+    demo.launch(debug=False,share=True,server_name="0.0.0.0")

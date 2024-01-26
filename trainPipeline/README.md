@@ -8,7 +8,7 @@ Then run the following command:
 ```
 docker compose up 
 ```
-After it finishes building, which can take quite a while, you will receive a URL in the console. Use this URL to access the website.
+After it finishes building, which can take quite a while, you can go to [http://localhost:7860](http://localhost:7860) or use the other link provided in the terminal.
 
 ### Installation Local
 
@@ -30,7 +30,7 @@ After it finishes building, which can take quite a while, you will receive a URL
     ```
 3. Run trainPipeline.py from the trainPipeline folder using the newly created Anaconda environment.
 
-4. Now, you can go to [http://localhost:7860](http://localhost:7860) or use the other link provided in the terminal
+4. Now, you can go to [http://localhost:7860](http://localhost:7860) or use the other link provided in the terminal.
 
 ## User manual
 

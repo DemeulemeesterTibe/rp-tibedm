@@ -39,7 +39,7 @@ RUN conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c
 
 COPY ./ ./
 
-EXPOSE 9000
+EXPOSE 7860
 
 # ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda-11.8/targets/x86_64-linux/lib/
 

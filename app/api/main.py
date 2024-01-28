@@ -1,4 +1,4 @@
-import base64
+import time
 import numpy as np
 from fastapi import FastAPI, File, Form, UploadFile, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -90,7 +90,7 @@ def getSpeaker():
 
 @app.get('/select/model/{modelname}')
 def selectModel(modelname):
-    global MODEL, MODEL_LIST, MODEL_NAME
+    global MODEL, MODEL_LIST, MODEL_NAME, SPEAKER_INF, SPEAKER_NAME
     if modelname not in MODEL_LIST:
         return {'status': 'Model not found'}
     print(f"Loading model {modelname}")
@@ -98,6 +98,9 @@ def selectModel(modelname):
     config = os.path.join('models',modelname,'config.json')
     vocab = os.path.join('models',modelname,'vocab.json')
     checkpoint = os.path.join('models',modelname,'best_model.pth')
+
+    SPEAKER_NAME = None
+    SPEAKER_INF = None
 
     MODEL = load_model(checkpoint,config,vocab)
     MODEL_NAME = modelname
@@ -150,14 +153,15 @@ async def runOpenai(request: Request):
         client_messages = json['messages']
         lang = json['language']
 
-        lang = LANGUAGES[lang]
+        langShort = LANGUAGES[lang]
+
         messages = [
             {"role": "user", "content": message['value']} if message['speaker'] == 'User' else
             {"role": "assistant", "content": message['value']}
             for message in client_messages
         ]
         # add a new message to the beginning of the list
-        messages.insert(0, {"role": "system", "content": "You are a virtual assistant that always speaks in " + lang + "Always keep your answers short and concise under 300 characters."})
+        messages.insert(0, {"role": "system", "content": f"You are a virtual assistant that always speaks in {lang}. Always keep your answers short and concise under 250 characters. Always do what the user asks."})
         response = CLIENT_OPENAI.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=messages,
@@ -166,7 +170,11 @@ async def runOpenai(request: Request):
 
         print(f"OpenAI completion completed for {text}")
 
-        out = run_tts(MODEL, lang, text, SPEAKER_INF)
+        startTime = time.time()
+
+        out = run_tts(MODEL, langShort, text, SPEAKER_INF)
+
+        print(f"TTS completed in {time.time() - startTime} seconds")
         # audio = None
 
         return {'status': 'OpenAI completion completed', 'text': text, 'audio': out}

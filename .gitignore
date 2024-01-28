@@ -39,3 +39,6 @@ trainPipeline/dockerData
 log.out
 
 app/web/public/audio/songs/*.wav
+tts_models/coqui_xtss/examples/nathanXTSSExampleFrench.wav
+tts_models/coqui_xtss/examples/nathanXTSSExampleDutch.wav
+tts_models/coqui_xtss/examples/nathanXTSSExampleEnglish.wav
